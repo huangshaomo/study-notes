@@ -153,7 +153,7 @@ $('.sort').on('click', function() {
 
 ​		上述的两个实现，各有优缺点，从数据层面上来说，第二个更好，因为它是**先改变数据，再改变视图**，这样就免去了再次收集数据的步骤，但是第二个过于粗暴，如果能像第一个那样精准就好了，因此我们设想的步骤大致如下:
 
-![image-20200804223610336](C:\Users\Administrator\AppData\Roaming\Typora\typora-user-images\image-20200804223610336.png)
+![image-20200804223610336](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200804223610336.png)
 
 其实上面大概就有点虚拟DOM的意思了，首先是先控制数据再渲染视图，**但是视图不是直接渲染的，是采用diff渲染的，diff渲染就是通过比较渲染前后的数据，只当数据有变动才会发生真正的渲染。**
 

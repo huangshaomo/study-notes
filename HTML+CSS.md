@@ -90,7 +90,7 @@ display默认为inline
 
 - 行盒的水平方向的margin、padding生效，垂直方向的margin、padding不生效，但垂直的padding还是会影响背景的大小，因为背景默认参考的是border-box，但实际上是视觉发生变化，并没有占用空间，所以不会导致其他盒子移动，因为行盒认为，行高只取决于line-height属性
 
-  ![UvSKTBGoC2](D:/Typora/typora-user-images/HTML+CSS/UvSKTBGoC2.gif)
+  ![UvSKTBGoC2](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/UvSKTBGoC2.gif)
 
 - 块盒的margin、padding都可以设置（行块盒也可以 ）
 
@@ -164,7 +164,7 @@ text-overflow:eliipsis	文字溢出用圆点代替
 
 **可替换元素特点**：绝大部分可替换元素均为行盒，但又类似于行块盒，因为具有行块盒的特点，比如可以设置width和height，但CSS又不能完全控制其中的样式，比如图片的颜色是无法控制的
 
-![image-20200428183248871](D:/Typora/typora-user-images/HTML+CSS/image-20200428183248871.png)
+![image-20200428183248871](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200428183248871.png)
 
 ### 层叠（权重计算）
 
@@ -229,37 +229,37 @@ text-overflow:eliipsis	文字溢出用圆点代替
 >
 > 浏览器的渲染是一个一个元素依次进行渲染的，且渲染顺序是依旧树形目录结构从根节点开始进行深度优先渲染
 
-![chrome_5hnd7giNdW](D:/Typora/typora-user-images/HTML+CSS/chrome_5hnd7giNdW.png)
+![chrome_5hnd7giNdW](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_5hnd7giNdW.png)
 
 
 
 **渲染每个元素的前提条件：该元素的所有CSS属性必须有值**
 
-![image-20200506221936796](D:/Typora/typora-user-images/HTML+CSS/image-20200506221936796.png)
+![image-20200506221936796](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200506221936796.png)
 
 ####  **1. 确定声明值**
 
 > 参考样式表（作者样式表或浏览器默认样式表）中有没有冲突的声明，作为CSS属性值
 
-![image-20200506224602751](D:/Typora/typora-user-images/HTML+CSS/image-20200506224602751.png)
+![image-20200506224602751](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200506224602751.png)
 
 #### 2. 层叠冲突
 
 > 对样式表有冲突的声明使用层叠规则，确定CSS属性值
 
-![image-20200506224946466](D:/Typora/typora-user-images/HTML+CSS/image-20200506224946466.png)
+![image-20200506224946466](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200506224946466.png)
 
 #### 3. 使用继承
 
 > 对**仍然没有值**的属性，若可以继承，则继承父元素的值
 
-![image-20200506225307537](D:/Typora/typora-user-images/HTML+CSS/image-20200506225307537.png)
+![image-20200506225307537](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200506225307537.png)
 
 #### 4. 使用默认值
 
 > 对仍然没有值的属性，全部使用默认值（所有CSS属性都有默认值，比如width的默认值是auto，background的默认值是transparent(透明)）
 
-![image-20200506225703600](D:/Typora/typora-user-images/HTML+CSS/image-20200506225703600.png)
+![image-20200506225703600](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200506225703600.png)
 
 
 
@@ -390,25 +390,25 @@ text-overflow:eliipsis	文字溢出用圆点代替
 
 4. 若剩余空间无法放下浮动的盒子，则将该盒子向下移动，直到具备足够的空间能容纳盒子，然后再向左或右移动
 
-   ![jsEFIGXMSt](D:/Typora/typora-user-images/HTML+CSS/jsEFIGXMSt.gif)
+   ![jsEFIGXMSt](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/jsEFIGXMSt.gif)
 
 5. 浮动盒子在包含块中排列时，如果前面有常规流，会避开常规流块盒(浮动看得到常规流)
 
    **例如：将块盒放在所有浮动盒之前**
 
-   <img src="D:/Typora/typora-user-images/HTML+CSS/image-20200429083712280.png" alt="image-20200429083712280"  />
+   <img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429083712280.png" alt="image-20200429083712280"  />
 
 6. 常规流块盒在排列时，无视浮动盒子（常规流看不到浮动）
 
    **例如：将块盒放在所有浮动盒之后**
 
-   ![image-20200429084020513](D:/Typora/typora-user-images/HTML+CSS/image-20200429084020513.png)
+   ![image-20200429084020513](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429084020513.png)
 
    **文字是行盒，看得到浮动盒子，所以会避开**
 
 7. 行盒在排列时，会避开浮动盒子（文字环绕，文字就是行盒）
 
-   ![image-20200429100059956](D:/Typora/typora-user-images/HTML+CSS/image-20200429100059956.png)
+   ![image-20200429100059956](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429100059956.png)
 
    文字环绕的特点就是利用到了**行盒会避开浮动盒的特点**，将图片设为浮动，文字就是行盒，会避开浮动盒。
 
@@ -433,11 +433,11 @@ text-overflow:eliipsis	文字溢出用圆点代替
   
     例如：浮动盒float:left，块盒clear:left
   
-    ![image-20200429092252511](D:/Typora/typora-user-images/HTML+CSS/image-20200429092252511.png)
+    ![image-20200429092252511](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429092252511.png)
   
     例如：如果浮动盒子float:left，块盒clear:right，会出现下面这种情况
   
-    ![image-20200429092205759](D:/Typora/typora-user-images/HTML+CSS/image-20200429092205759.png)
+    ![image-20200429092205759](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429092205759.png)
   
     清除右浮动，只是让块盒子抬头看看右上方有没有浮动盒子，而浮动盒子都在左边，盒子看到右上方没有，就认为没有浮动盒子，所有就跑到了左上。
   
@@ -447,11 +447,11 @@ text-overflow:eliipsis	文字溢出用圆点代替
   
     例如：浮动盒float:right  块盒：clear:right
   
-    ![image-20200429092039619](D:/Typora/typora-user-images/HTML+CSS/image-20200429092039619.png)
+    ![image-20200429092039619](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429092039619.png)
   
     例如：如果浮动盒float:right，块盒:clear:left，会出现下面这种情况
   
-    ![image-20200429092118646](D:/Typora/typora-user-images/HTML+CSS/image-20200429092118646.png)
+    ![image-20200429092118646](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429092118646.png)
   
     因为只是让块盒子看看左上方有没有左浮动盒子，而浮动盒子都在右边，盒子看到左上方没有，就认为没有浮动盒子，所以就跑到了左上。
   
@@ -459,15 +459,15 @@ text-overflow:eliipsis	文字溢出用圆点代替
   
     例如：浮动盒float:left   块盒clear:both
   
-    ![image-20200429092928473](D:/Typora/typora-user-images/HTML+CSS/image-20200429092928473.png)
+    ![image-20200429092928473](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429092928473.png)
   
     例如：浮动盒float:right   块盒clear:both
   
-    ![image-20200429092955344](D:/Typora/typora-user-images/HTML+CSS/image-20200429092955344.png)
+    ![image-20200429092955344](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429092955344.png)
   
     例如：浮动盒float:left 、float:right  块盒clear:both
   
-    ![image-20200429093037823](D:/Typora/typora-user-images/HTML+CSS/image-20200429093037823.png)
+    ![image-20200429093037823](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429093037823.png)
 
 ##### 解决高度坍塌方法
 
@@ -514,11 +514,11 @@ text-overflow:eliipsis	文字溢出用圆点代替
 
    不加clearFix时
 
-<img src="D:/Typora/typora-user-images/HTML+CSS/image-20200428084315726.png" alt="image-20200428084315726" style="zoom:50%;" />
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200428084315726.png" alt="image-20200428084315726" style="zoom:50%;" />
 
 加了clearFix后
 
-<img src="D:/Typora/typora-user-images/HTML+CSS/image-20200428084357653.png" alt="image-20200428084357653" style="zoom:50%;" />
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200428084357653.png" alt="image-20200428084357653" style="zoom:50%;" />
 
 **2.利用BFC的特性**
 
@@ -555,7 +555,7 @@ text-overflow:eliipsis	文字溢出用圆点代替
 
 **不创建BFC前**
 
-<img src="D:/Typora/typora-user-images/HTML+CSS/image-20200430083541509.png" alt="image-20200430083541509" style="zoom:80%;" />
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430083541509.png" alt="image-20200430083541509" style="zoom:80%;" />
 
 可以发现，自动高度计算是不会计算浮动元素
 
@@ -567,7 +567,7 @@ text-overflow:eliipsis	文字溢出用圆点代替
 overflow:hidden //其他方式也可以创建BFC，但影响最小的只有oveflow:hidden
 ```
 
-<img src="D:/Typora/typora-user-images/HTML+CSS/image-20200430083744316.png" alt="image-20200430083744316" style="zoom:80%;" />
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430083744316.png" alt="image-20200430083744316" style="zoom:80%;" />
 
 创建BFC后，自动高度会计算浮动元素
 
@@ -619,11 +619,11 @@ overflow:hidden //其他方式也可以创建BFC，但影响最小的只有ovefl
 
 包含块不同：固定为视口(浏览器的可视窗口)
 
-![image-20200428162615125](D:/Typora/typora-user-images/HTML+CSS/image-20200428162615125.png)
+![image-20200428162615125](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200428162615125.png)
 
 上面的红色部分就是视口（不包含滚动条）
 
-![CYExUVfKDn](D:/Typora/typora-user-images/HTML+CSS/CYExUVfKDn.gif)
+![CYExUVfKDn](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/CYExUVfKDn.gif)
 
 可以发现，无论如何滚动网页，元素位置都没有发生改变。
 
@@ -656,7 +656,7 @@ dov{
 </body>
 ```
 
-![image-20200428163537403](D:/Typora/typora-user-images/HTML+CSS/image-20200428163537403.png)
+![image-20200428163537403](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200428163537403.png)
 
 
 
@@ -720,7 +720,7 @@ dov{
 - 浮动定位和绝对定位（absolute、fixed...）元素
 - overflow不等于visible（默认值）的块盒
 
-![image-20200430081217462](D:/Typora/typora-user-images/HTML+CSS/image-20200430081217462.png)
+![image-20200430081217462](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430081217462.png)
 
 
 
@@ -761,7 +761,7 @@ dov{
 
   没创建BFC前
 
-  ![image-20200430092343370](D:/Typora/typora-user-images/HTML+CSS/image-20200430092343370.png)
+  ![image-20200430092343370](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430092343370.png)
 
 ​		可以发现，自动高度计算是不会计算浮动元素
 
@@ -772,7 +772,7 @@ dov{
 overflow:hidden //其他方式也可以创建BFC，但影响最小的只有oveflow:hidden
 ```
 
-​		![image-20200430092108118](D:/Typora/typora-user-images/HTML+CSS/image-20200430092108118.png)
+​		![image-20200430092108118](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430092108118.png)
 
 ​		创建BFC后，自动高度会计算浮动元素
 
@@ -801,7 +801,7 @@ overflow:hidden //其他方式也可以创建BFC，但影响最小的只有ovefl
 
   不创建BFC之前
 
-  ![image-20200430085504290](D:/Typora/typora-user-images/HTML+CSS/image-20200430085504290.png)
+  ![image-20200430085504290](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430085504290.png)
 
   常规流盒子看不到浮动盒
 
@@ -812,7 +812,7 @@ overflow:hidden //其他方式也可以创建BFC，但影响最小的只有ovefl
   overflow:hideen
   ```
 
-  ![image-20200430085707096](D:/Typora/typora-user-images/HTML+CSS/image-20200430085707096.png)
+  ![image-20200430085707096](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430085707096.png)
 
   
 
@@ -841,7 +841,7 @@ overflow:hidden //其他方式也可以创建BFC，但影响最小的只有ovefl
 
   不创建BFC前
 
-  ![image-20200430091010494](D:/Typora/typora-user-images/HTML+CSS/image-20200430091010494.png)
+  ![image-20200430091010494](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430091010494.png)
 
   此时，wrapper和child元素都处于html创建的同一个bfc中。
 
@@ -852,7 +852,7 @@ overflow:hidden //其他方式也可以创建BFC，但影响最小的只有ovefl
   overflow: hidden;
   ```
 
-  ![image-20200430090937470](D:/Typora/typora-user-images/HTML+CSS/image-20200430090937470.png)
+  ![image-20200430090937470](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200430090937470.png)
 
   给wrapper元素创建BFC过后，child处在wrapper创建的BFC中，而wrapper处在html创建的BFC中，不同的BFC之间要要求互不影响，因此两个BFC之间的元素margin-top自然不会合并了
 
@@ -900,7 +900,7 @@ overflow:hidden //其他方式也可以创建BFC，但影响最小的只有ovefl
 <div class="contain"></div>
 ```
 
-![2ogYiqvl1v](D:/Typora/typora-user-images/HTML+CSS/2ogYiqvl1v.gif)
+![2ogYiqvl1v](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2ogYiqvl1v.gif)
 
 
 
@@ -933,7 +933,7 @@ overflow:hidden //其他方式也可以创建BFC，但影响最小的只有ovefl
 <div class="contain"></div>
 ```
 
-![Yv51G5GFum](D:/Typora/typora-user-images/HTML+CSS/Yv51G5GFum.gif)
+![Yv51G5GFum](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Yv51G5GFum.gif)
 
 
 
@@ -1162,7 +1162,7 @@ flex
 
 > font-size设置的字体实际上是字体的相对大小
 
-![image-20200429183218224](D:/Typora/typora-user-images/HTML+CSS/image-20200429183218224.png)
+![image-20200429183218224](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429183218224.png)
 
 **计算规则**
 
@@ -1191,7 +1191,7 @@ flex
 
 计算结果为：2398/2048*200 ≈234
 
-![image-20200429111400008](D:/Typora/typora-user-images/HTML+CSS/image-20200429111400008.png)
+![image-20200429111400008](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429111400008.png)
 
 background对字体填充的是content-area的区域
 
@@ -1207,7 +1207,7 @@ background对字体填充的是content-area的区域
 >
 > (空隙)，line-gap默认情况下，是字体设计者决定
 
-![image-20200429183038840](D:/Typora/typora-user-images/HTML+CSS/image-20200429183038840.png)
+![image-20200429183038840](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429183038840.png)
 
 top到bottom的距离，叫做virtual-area(虚拟区)，而line-height，就是virtual-area
 
@@ -1237,7 +1237,7 @@ consolas字体，gap默认为0
 
 
 
-![image-20200429113341983](D:/Typora/typora-user-images/HTML+CSS/image-20200429113341983.png)
+![image-20200429113341983](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429113341983.png)
 
 字体背景与红色背景刚好重合，而我们知道，字体背景的填充区域为content-area，也就是顶线到低线的距离，这就说明没有gap，因为如果有gap的话，字体背景不会填充gap区域，但总体的高度是存在的，会看到后面的父红色背景。
 
@@ -1247,7 +1247,7 @@ consolas字体，gap默认为0
 
 Arial字体，gap默认为67
 
-![image-20200429113525006](D:/Typora/typora-user-images/HTML+CSS/image-20200429113525006.png)
+![image-20200429113525006](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429113525006.png)
 
 字体背景与父红色背景没有重合，说明什么呢？说明字体背景填充的区域不是整个字体的区域，因为gap区域字体背景是无法填充的，说明有gap。
 
@@ -1276,7 +1276,7 @@ Arial字体，gap默认为67
 </div>
 ```
 
-![image-20200429115153430](D:/Typora/typora-user-images/HTML+CSS/image-20200429115153430.png)
+![image-20200429115153430](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429115153430.png)
 
 字体背景区域大于父红色背景，说明virtual-area缩小了，也就是说gap变为负数了，造成这样的原因是font-size设置的200px是字体的相对大小，实际大小为234px（content-area），而line-height设置200，也就是将virtual-area变为了200,此时的content-area > virtual-area,说明gap变为了负数
 
@@ -1286,7 +1286,7 @@ Arial字体，gap默认为67
 
 content-area > virtual-area出导致出现一个问题：文字重叠
 
-![image-20200429120532928](D:/Typora/typora-user-images/HTML+CSS/image-20200429120532928.png)
+![image-20200429120532928](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429120532928.png)
 
 因为文字背景填充的是content-area区域，而文字实际的大小以virtual-area区域进行排版
 
@@ -1294,7 +1294,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
 
 ##### vertical-align
 
-![image-20200429183038840](D:/Typora/typora-user-images/HTML+CSS/image-20200429183038840.png)
+![image-20200429183038840](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429183038840.png)
 
 决定参考线的元素：
 
@@ -1335,7 +1335,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
 
 - **baseline(默认值)**：该元素基线与父元素基线对齐
 
-  ![image-20200429190204508](D:/Typora/typora-user-images/HTML+CSS/image-20200429190204508.png)
+  ![image-20200429190204508](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429190204508.png)
 
   span1和span2的基线与p元素的基线对其
 
@@ -1349,7 +1349,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
   }
   ```
 
-  ![image-20200429190940001](D:/Typora/typora-user-images/HTML+CSS/image-20200429190940001.png)
+  ![image-20200429190940001](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429190940001.png)
 
   span1的基线与p元素的上基线对其
 
@@ -1363,7 +1363,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
   }
   ```
 
-  ![image-20200429191501948](D:/Typora/typora-user-images/HTML+CSS/image-20200429191501948.png)
+  ![image-20200429191501948](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429191501948.png)
 
   ​	span1的基线与p元素的下基线对其
 
@@ -1379,7 +1379,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
 
   
 
-  ![image-20200429192347714](D:/Typora/typora-user-images/HTML+CSS/image-20200429192347714.png)
+  ![image-20200429192347714](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429192347714.png)
 
   ​	稍微对span1线之间距离做了些修改，不影响整体，Arial字体实际上gap为0，实际修改后更加准确
 
@@ -1397,7 +1397,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
   }
   ```
 
-  ![image-20200429193130306](D:/Typora/typora-user-images/HTML+CSS/image-20200429193130306.png)
+  ![image-20200429193130306](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429193130306.png)
 
 
 
@@ -1471,17 +1471,17 @@ line-box是承载文字内容的必要条件，以下情况不生成行框：
 
 表单元素：基线位置在内容底边
 
-![image-20200429200015828](D:/Typora/typora-user-images/HTML+CSS/image-20200429200015828.png)
+![image-20200429200015828](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429200015828.png)
 
 行块盒：
 
 1. 行块盒最后一行有Line-box，用最后一行的基线作为整个行块盒的基线。
 
-![image-20200429200355791](D:/Typora/typora-user-images/HTML+CSS/image-20200429200355791.png)
+![image-20200429200355791](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429200355791.png)
 
 2. 如果行块盒内部没有行盒（文字）则使用，则使用下外边距作为基线
 
-![image-20200429200614017](D:/Typora/typora-user-images/HTML+CSS/image-20200429200614017.png)
+![image-20200429200614017](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429200614017.png)
 
 
 
@@ -1543,7 +1543,7 @@ line-box是承载文字内容的必要条件，以下情况不生成行框：
 
 2. 条件判断
 
-   ![image-20200429215749673](D:/Typora/typora-user-images/HTML+CSS/image-20200429215749673.png)
+   ![image-20200429215749673](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429215749673.png)
 
 IE有个特点是能识别注释里边的一些特点文字，比如 【if IE】 ...【endif】表示如果是IE浏览器，会解析这段注释里边的代码，甚至可以单独添加一个CSS外链。
 
