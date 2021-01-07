@@ -588,117 +588,247 @@ require("./b");
 
 **编译**：
 
-1. webpack首先在内部根据入口文件构建chunk(块)，多个入口则构建多个chunk(块)。初始化的chunk中只有一个入口文件模块
+1. webpack首先在内部根据入口文件构建chunk(块)，多个入口则构建多个chunk(块)。初始化的chunk中为空，没有模块。
 
-   <img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-09-11-54-08.png" alt="2020-01-09-11-54-08" style="zoom: 50%;" />
+   ```javascript
+//chunk
+   {
+   
+   }
+   ```
+   
+2. 检查入口模块路径（"./src/index.js"）是否记录在chunk中，如果在chunk存在就是加载过的了，此时的chunk是空的，说明该模块文件未加载
 
    ```javascript
    //chunk
    {
-       "./src/index.js":null,
-   }
+   
+}
    ```
 
-2. 读取入口模块（"./src/index.js"）检查是否记录在dependeces依赖中，刚开始依赖自然为空
+3. 读取入口模块文件的内容，使用AST抽象语法数，进行树形结构遍历，找到模块依赖关系，并把找到的依赖模块记录到dependeces数组中
 
    ```javascript
-   //dependence
-   []
+   //index.js
+   console.log("index");
+   require("./a");
+   require("./b");
    ```
 
-   显示入口文件模块不存在依赖中，则把该入口模块记录到依赖中，如下
+   但记录时不会直接记录该依赖模块的路径`./a`，而是记录该依赖模块的完整相对路径，如下
 
    ```javascript
-   //dependeces
-   ["./src/index.js"]
+   //dependecies[index]
+   ["./src/a.js","./src/b.js"]
    ```
 
-3. 读取入口模块文件的内容，使用AST进行语法分析，找到模块导入语法声明，并把找到的模块导入语法的参数作为依赖记录到dependeces中
+4. 然后把入口模块文件内容的模块依赖函数替换为webpack内部封装的\__webpack_require__函数，此时的代码就叫转换后的代码
 
    ```javascript
-   //dependeces
-   ["./src/index.js","./src/a.js","./src/b.js"]
+   console.log("index");
+   require("./a");  ==>    __webpack_require__(/*! ./a */ "./src/a.js");
+   require("./b");  ==>    __webpack_require__(/*! ./b */ "./src/b.js");
    ```
 
-4. 然后把通过AST分析入口文件找到的模块导入声明语法替换为webpack内部封装的\__webpack_require__函数。
-
-   ```javascript
-   require("./src/index.js");
-   ==> 
-    __webpack_require__(/*! ./a */ "./src/a.js");
-   ```
-
-5. 然后把转换后的模块导入声明语法记录在chunk的入口文件模块中
+5. 然后把转换后的代码记录在chunk的入口文件模块中
 
    ```javascript
    //chunk
    {
-       "./src/index.js":{
-           __webpack_require__(/*! ./a */ "./src/a.js"),
-       	__webpack_require__(/*! ./b */ "./src/b.js");
-       },
+       模块id: "./src/index.js",
+       转换后的代码：
+       console.log("index");
+       __webpack_require__(/*! ./a */ "./src/a.js"),
+       __webpack_require__(/*! ./b */ "./src/b.js");
    }
    ```
 
-6. 根据denpendences的内容，继续递归加载a模块（流程从上面的1-6），直到denpendences中的所有依赖模块全部加装完毕
+6. 接下来还没完，因为这个入口模块文件中依赖了其他模块，然后会根据denpendences的内容，继续递归加载a模块（./src/a.js）【下面的是递归，和1-6是一样的。】
 
-   
+   ```java
+   取出"./src/a.js"出来执行，此时Index的依赖如下
+   //dependecies[index]
+   ["./src/b.js"] 
+   ```
 
-7. **产生chunk assets**
+7. a模块文件路径不存在chunk中，则读取a模块文件内容，使用AST抽象语法数，进行树形结构遍历，找到模块依赖关系，并把找到的依赖模块记录到dependeces数组中
 
-   在上面六步的依赖分析完毕后的，chunk中会产生一个模块列表，列表中包含了依赖的**模块id**和**模块转换后的代码**
+   ```javascript
+   //a 
+   console.log("a");
+   require("./b")
+   module.exports = "a"
+   ```
+
+   但记录时不会直接记录该依赖模块的路径`./a`，而是记录该依赖模块的完整相对路径，如下
+
+   ```javascript
+   //dependecies[a]
+   ["./src/b.js"]
+   ```
+
+8. 然后把a模块文件内容的模块依赖函数替换为webpack内部封装的\__webpack_require__函数，此时的代码就叫转换后的代码
+
+   ```javascript
+   console.log("a");
+   require("./b");  ==>    __webpack_require__(/*! ./b */ "./src/b.js");
+   module.exports = "a"
+   ```
+
+9. 然后把转换后的代码记录在chunk的a文件模块中，如下
 
    ```javascript
    //chunk
    {
-       "./src/index.js":{	//模块1
-           __webpack_require__(/*! ./a */ "./src/a.js"),
-       	__webpack_require__(/*! ./b */ "./src/b.js");
-       },
-       "./src/a.js":{		//模块2
-       	__webpack_require__(/*! ./b */ "./src/b.js");
-       },
-       "./src/b.js":{		//模块3
-       },
-   }
+       模块id: "./src/index.js",
+       转换后的代码：
+       console.log("index");
+       __webpack_require__(/*! ./a */ "./src/a.js"),
+       __webpack_require__(/*! ./b */ "./src/b.js");
+   },
+    {
+       模块id: "./src/a.js",
+       转换后的代码：
+       console.log("a");
+       __webpack_require__(/*! ./b */ "./src/b.js");
+       module.exports = "a"
+    }  
    ```
 
-   接下来，webpack会根据配置为Chunk生成一个资源列表，即`chunk assets`，资源列表可以理解为是生成到最终文件的文件名和文件内容,相当是webpack把chunk当成参数传递进去了。
-
-   ```javascript
-   (function (modules) { // webpackBootstrap
-   	function __webpack_require__(){
-           //...
-       }
-       return __webpack_require__(__webpack_require__.s = "./src/index.js")
-   })({
-   
-       "./src/a.js": (function (module, exports, __webpack_require__) {
-         __webpack_require__(/*! ./b */ "./src/b.js")
-         // ...
-       }),
-   
-       "./src/b.js": (function (module, exports) {
-         module.exports = "resB"
-         // ...
-       }),
-   
-       "./src/index.js": (function (module, exports, __webpack_require__) {
-         __webpack_require__(/*! ./a */ "./src/a.js")
-         // ...
-       })
-     });
-   ```
-
-   然后为这个chunk assets资源列表(文件)创建一个hash，里边的内容不变则hash不变。
-
    
 
-8. **合并chunk assest**
+10. 接下来还没完，因为这个a模块文件中依赖了b模块文件，然后会根据denpendences的内容，继续递归加载b模块（./src/b.js）
 
-   如果有多个chunk，生成多个chunk assets资源列表(多个文件)，则把将多个chunk的assets合并到一起，并产生一个总的hash，所有文件里边的内容不变则hash不变。
+    ```java
+    取出"./src/b.js"出来执行，此时a的依赖如下
+    //dependecies[a]
+    [null] 
+    ```
 
-   
+11. b模块文件路径不存在chunk中，则读取b模块文件内容，使用AST抽象语法数，进行树形结构遍历，找到模块依赖关系，而b模块不存在依赖关系，因为b不依赖任何模块
+
+    ```javascript
+    //b
+    console.log('b');
+    module.exports = "b"
+    ```
+
+    因此b模块的依赖是空的
+
+    ```javascript
+    //dependecies[b]
+    [null]
+    ```
+
+12. 然后把b模块文件内容的模块依赖函数替换为webpack内部封装的\__webpack_require__函数，此时的代码就叫转换后的代码,而b中没有模块依赖函数，所以转换后的b代码依旧是一样的
+
+    ```javascript
+    console.log('b');
+    module.exports = "b"
+    ```
+
+13. 然后把转换后的代码记录在chunk的a文件模块中，如下
+
+    ```javascript
+    //chunk
+    {
+        模块id: "./src/index.js",
+        转换后的代码：
+        console.log("index");
+        __webpack_require__(/*! ./a */ "./src/a.js"),
+        __webpack_require__(/*! ./b */ "./src/b.js");
+    }
+    ,
+     {
+        模块id: "./src/a.js",
+        转换后的代码：
+        console.log("a");
+        __webpack_require__(/*! ./b */ "./src/b.js");
+        module.exports = "a"
+     }
+    ,
+     {
+        模块id: "./src/b.js",
+        转换后的代码：
+    	console.log('b');
+    	module.exports = "b"
+     } 
+    ```
+
+    
+
+14. 接下来，由于b没有其他模块依赖，b便结束，此时回到a的依赖，因为依赖的b模块也加载完成了，a也不存在依赖了，a也结束，回到index，在a依赖加载完毕后，还剩下b依赖，然后继续加载b依赖，发现b依赖已经存在chunk中，说明b模块加载过来，则index的b模块也结束，再次回到Index，此时Index的依赖也加载完毕了，index也结束。完成。
+
+
+
+15. **产生chunk assets**
+
+    在上面的依赖分析完毕后的，chunk中会产生一个模块列表，列表中包含了依赖的**模块id**和**模块转换后的代码**
+
+    ```javascript
+    //chunk
+    {
+        模块id: "./src/index.js",
+        转换后的代码：
+        console.log("index");
+        __webpack_require__(/*! ./a */ "./src/a.js"),
+        __webpack_require__(/*! ./b */ "./src/b.js");
+    }
+    ,
+     {
+        模块id: "./src/a.js",
+        转换后的代码：
+        console.log("a");
+        __webpack_require__(/*! ./b */ "./src/b.js");
+        module.exports = "a"
+     }
+    ,
+     {
+        模块id: "./src/b.js",
+        转换后的代码：
+    	console.log('b');
+    	module.exports = "b"
+     } 
+    ```
+
+    接下来，webpack会根据配置为Chunk生成一个资源列表，即`chunk assets`，资源列表可以理解为是生成到最终文件的文件名和文件内容,相当是webpack把chunk当成参数传递进去了。
+
+    ```javascript
+    (function (modules) { // webpackBootstrap
+    	function __webpack_require__(){
+            //...
+        }
+        return __webpack_require__(__webpack_require__.s = "./src/index.js")
+    })({
+    
+        "./src/a.js": (function (module, exports, __webpack_require__) {
+            console.log("a");
+        	__webpack_require__(/*! ./b */ "./src/b.js");
+        	module.exports = "a"
+        }),
+    
+        "./src/b.js": (function (module, exports) {
+          	console.log('b');
+    		module.exports = "b"
+        }),
+    
+        "./src/index.js": (function (module, exports, __webpack_require__) {
+            console.log("index");
+            __webpack_require__(/*! ./a */ "./src/a.js"),
+            __webpack_require__(/*! ./b */ "./src/b.js");
+        })
+      });
+    ```
+
+    然后为这个chunk assets资源列表(文件)创建一个hash，里边的内容不变则hash不变。
+
+
+
+16. **合并chunk assest**
+
+    如果有多个chunk，生成多个chunk assets资源列表(多个文件)，则把将多个chunk的assets合并到一起，并产生一个总的hash，所有文件里边的内容不变则hash不变。
+
+    
 
 **输出：**
 
@@ -742,7 +872,7 @@ Entrypoint：表示使用名字为main的chunk 打包出了main.js，main.js.map
 6. chunkname：chunk的名称，如果没有配置则使用main
 7. id：通常值chunk的唯一编号，如果在开发环境下构建，和chunkname相同，如果是生产环境下构建，则使用一个从0开始的数字进行编号。
 
-**可以把最终的chunk当成全局立即执行函数的参数，chunk assets就是个接收了个chunk这个参数的全局立即执行函数，而build就是使用node的fs生成的打包文件。**
+**可以把最终的chunk当成全局立即执行函数的参数，chunk assets就是个接收了个chunk这个参数的全局立即执行函数文件，而build就是使用node的fs生成的打包文件。**
 
 
 
@@ -755,6 +885,10 @@ Entrypoint：表示使用名字为main的chunk 打包出了main.js，main.js.map
 ES6 Module则是看到ImortDeclaration，就知道是也是模块语法，抽出source里面的value值。
 
 <img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_f0y4kMa8jD.png" alt="chrome_f0y4kMa8jD" style="zoom:80%;" />
+
+
+
+### 出口和入口
 
 
 
