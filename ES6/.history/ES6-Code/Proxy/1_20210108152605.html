@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <script>
+        var target = {
+            name:"hsm",
+            age:18,
+            sex:"male"
+        }
+        var handler = {
+            get:function(val){
+                console.log(val);
+            },
+            set:function(val,newVal){
+                console.log(`参数${val}重新赋值为${newVal}`);
+            }
+        }
+        var preson = new Proxy(target,handler)
+        preson.name = 1
+        console.log(preson.age);
+</script>
+</body>
+</html>
