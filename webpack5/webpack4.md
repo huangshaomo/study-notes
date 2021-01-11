@@ -1,8 +1,4 @@
----
-
-
-
----
+![2020-01-09-10-53-28](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-09-10-26-15.png)
 
 # webpack
 
@@ -650,7 +646,7 @@ require("./b");
    ["./src/b.js"] 
    ```
 
-7. a模块文件路径不存在chunk中，则读取a模块文件内容，使用AST抽象语法数，进行树形结构遍历，找到模块依赖关系，并把找到的依赖模块记录到dependeces数组中
+7. a模块文件路径不存在chunk中，则读取a模块文件内容，使用AST抽象语法树，进行树形结构遍历，找到模块依赖关系，并把找到的依赖模块记录到dependeces数组中
 
    ```javascript
    //a 
@@ -704,7 +700,7 @@ require("./b");
     [null] 
     ```
 
-11. b模块文件路径不存在chunk中，则读取b模块文件内容，使用AST抽象语法数，进行树形结构遍历，找到模块依赖关系，而b模块不存在依赖关系，因为b不依赖任何模块
+11. b模块文件路径不存在chunk中，则读取b模块文件内容，使用AST抽象语法树，进行树形结构遍历，找到模块依赖关系，而b模块不存在依赖关系，因为b不依赖任何模块
 
     ```javascript
     //b
@@ -926,6 +922,462 @@ ES6 Module则是看到ImortDeclaration，就知道是也是模块语法，抽出
 
 
 
+### loader
+
+> webpack做的事情，仅仅是分析出各种模块的依赖关系，然后形成资源列表，最终打包生成到指定的文件夹中。更多的功能需要借助webpack loaders和webpack plugins完成
+
+webpack loader：loader本质上是一个函数，他的作用是将某个源码字符串转换成另一个源码字符串
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-10-39-24.png" alt="2020-01-13-10-39-24" style="zoom:50%;" />
+
+loader函数将在模块解析的过程中被调用，以得到最终的源码
+
+**全流程：**
+
+![2020-01-13-09-28-52](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-09-28-52.png)
+
+**chunk中解析模块的流程：**
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-09-29-08.png" alt="2020-01-13-09-29-08" style="zoom:50%;" />
+
+**chunk中解析模块的更详细流程：**
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-09-35-44.png" alt="2020-01-13-09-35-44" style="zoom:50%;" />
+
+**处理loaders流程：**
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-10-29-54.png" alt="2020-01-13-10-29-54" style="zoom:50%;" />
+
+**完整配置**
+
+```javascript
+module.exports = {
+    module: { //针对模块的配置，目前版本只有两个配置，rules、noParse
+        rules: [ //模块匹配规则，可以存在多个规则
+            { //每个规则是一个对象
+                test: /\.js$/, //匹配的模块正则
+                use: [ //匹配到后应用的规则模块
+                    {  //其中一个规则
+                        loader: "模块路径", //loader模块的路径，该字符串会被放置到require中，所以loader不用手动require();
+                        options: { //向对应loader传递的额外参数
+
+                        }
+                    }
+                ]
+            }
+        ]
+    }
+}
+```
+
+
+
+**简化配置**
+
+```javascript
+module.exports = {
+    module: { //针对模块的配置，目前版本只有两个配置，rules、noParse
+        rules: [ //模块匹配规则，可以存在多个规则
+            { //每个规则是一个对象
+                test: /\.js$/, //匹配的模块正则
+                use: ["模块路径1", "模块路径2"]//loader模块的路径，该字符串会被放置到require中
+            }
+        ]
+    }
+}
+```
+
+
+
+### plugin
+
+loader的功能定位是转换代码，而一些其他的操作难以使用loader完成，比如：
+
+- 当webpack生成打包文件时，顺便多生成一个描述文件
+- 当webpack编译启动时，控制台输出一句话表示webpack启动了
+- ...
+
+这种类似的功能需要把功能嵌入到webpack的编译流程中，而这种事情的实现是依托于plugin的
+
+红点表示plugin可以使用钩子函数运行在的任意编译阶段，
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-15-12-45-16.png" alt="2020-01-15-12-45-16" style="zoom:50%;" />
+
+plugin的本质是一个带有apply方法的对象
+
+```javascript
+var plugin = {
+    apply: function(compiler){}
+}
+```
+
+通常，习惯上，我们会将该对象写成构造函数的模式
+
+```javascript
+class MyPlugin{	//自己创建一个plugin
+    apply(compiler){}
+}
+var plugin = new MyPlugin();
+```
+
+要将插件应用到webpack，需要把插件对象配置到webpack的pluigins数组中，如下：
+
+```javascript
+module.exports = {
+    plugins:[
+        new Myplugin()
+    ]
+}
+```
+
+**apply函数会在初始化阶段，创建好Compiler对象后运行**
+
+**compiler对象是在初始化阶段构建的**，整个webpack打包期间只有一个compiler对象，后续完成打包工作的是compiler对象内部创建的compilation
+
+apply方法会在**创建好compiler对象后调用**，并向方法传入一个compiler对象。
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-15-12-49-26.png" alt="2020-01-15-12-49-26" style="zoom:50%;" />
+
+**compiler和compilation**
+
+- `compiler`对象代表了完整的`webpack`环境配置，这个对象在初始化阶段被一次性构建，并配置好所有可操作的设置，包括options，loader和plugin。当在webpack环境中应用一个插件时，插件将收到此compiler对象的引用。可以使用它来访问`webpack`的主环境
+
+- `compilation`对象代表了一个资源版本的构建，当运行webpack开发环境中间件时，每当检测到一个文件变化，就会创建一个新的compilation，从而生成一组新的编译资源。一个
+
+  compilation对象表现了当前的模块资源，编译生成资源，变化的文件，一集被跟踪依赖的状态信息。compilation对象也提供了很多关键时机的回调，以供插件做自定义处理时选择使用。
+
+
+
+
+
+compiler对象提供了大量的钩子函数（hooks，可以理解为事件），plugin的开发者可以注册这些钩子函数，参与webpack编译和生成。
+
+你可以在apply方法中使用下面的代码注册钩子函数:
+
+```javascript
+class MyPlugin{
+    apply(compiler){
+        //compiler.hooks.someHook.tap(...)
+        compiler.hooks.事件名称.事件类型(name,function(){
+            //事件处理函数
+        })
+    }
+}
+```
+
+**事件名称**
+
+即要监听的事件名，即钩子名，所有的钩子：
+
+https://www.webpackjs.com/api/compiler-hooks
+
+**事件类型**
+
+这一部分使用的是Tapable API，这个小型的库是一个专门用于钩子函数监听的库
+
+它提供了一些事件类型：
+
+- tap：注册一个同步的钩子函数，函数运行完毕则表示事件处理结束
+- tapAsync：注册一个基于回调的异步的钩子函数，函数通过调用一个回调表示事件处理结束
+- tapPromise：注册一个机遇Promise的异步的钩子函数，函数通过返回promise进入已决状态表示事件处理结束
+
+
+
+**处理函数**
+
+处理函数有一个事件参数`compilation`
+
+
+
+
+
+### 区分环境
+
+有的时候，我们需要针对生产环境和开发环境分别书写webpack配置
+
+为了更好的适应这种要求，webpack运行配置不仅可以是一个对象，还可以是一个函数
+
+```javascript
+module.exports = env => {
+    return {
+     //配置内容   
+    }
+}
+```
+
+在开始构建时，webpack如果发现配置是一个函数，会调用该函数，将函数返回的对象作为webpack配置内容，因此，开发者可以根据不同的环境返回不同的对象。
+
+
+
+在调用webpack函数时，webpack会向函数传入一个参数env，该参数的值来自于webpack命令中给env指定的值。例如
+
+```shell
+npx webpack --env abc #env: "abc"
+npx webpack --env.abc #env: {abc:true}
+npx webpack --env.abc=1 #env: {abc:1}
+npx webpack --env.abc=1 --env.bcd=2 # env:{abc:1,bcd:2}
+```
+
+env是一个对象{}
+
+这样一来，我们就可以在命令中指定环境，在代码中进行判断，根据环境返回不同的配置结果
+
+
+
+**webpack.config.js**：webpack默认文件，如果存在会自动执行该文件
+
+```javascript
+var baseConfig = require("./webpack.base.js");
+var devConfig = require("./webpack.dev.js");
+var prodConfid = require("./webpack.prod.js");
+console.log("默认配置文件执行了");
+modulex.exports = env =>{
+    if(env && env.prod){
+        return {
+            ...baseConfig,
+            ...prodConfig
+        }
+    }else{
+        return{
+            ...baseConfig,
+        	...devConfig
+        }
+    }
+}
+```
+
+**webpack.base.js**
+
+```javascript
+module.exports = {
+    entry: "./src/index.js",
+    output: {
+        filename: "scripts/[name]-[hash:5].js"
+    }
+}
+```
+
+**webpack.dev.js**
+
+```javascript
+module.exports = {  
+    mode: "development",
+    devtool: "source-map"
+}
+```
+
+**webpack.prod.js**
+
+```javascript
+module.exports = {
+    mode: "production",
+    devtool: "none"
+}
+```
+
+```shell
+npx webpack --env.prod
+```
+
+上面表示，使用了webpack命令后，首先会先执行`webpack.config.js`，然后判断当前环境（env&& env.prod）env是否存在，且env.prod是否为true，再分别执行不同的代码
+
+
+
+### 其他细节配置
+
+#### context
+
+```js
+context: path.resolve(__dirname,"app")
+```
+
+该配置会影响入口和loaders的解析，入口和loaders的相对路径会以context的配置作为基准路径，这样，你的配置会独立于CWD（current working directrory 当前执行路径）
+
+#### output
+
+##### library
+
+```js
+library:"abc"
+```
+
+这样一来，打包后的结果中，会将只执行函数的执行结果暴露给abc
+
+
+
+##### libraryTarget
+
+```js
+libraryTarget:"var"
+```
+
+该配置可以更加精细的控制如何暴露入口包的导出结果
+
+其他可用的值有：
+
+- var：默认值，暴露给一个普通变量
+- window：暴露给window对象的一个属性
+- this：暴露给this的一个属性
+- global：暴露给global的一个属性
+- commonjs：暴露给exports的一个属性
+- 其他：https://www.webpackjs.com/configuration/output/#output-librarytarget
+
+
+
+#### target
+
+设置打包结果最终要运行的环境，常用有
+
+```js
+target:"web"
+```
+
+- web：打包后的代码运行在web环境中
+- node：打包后的代码运行在node环境中
+- 其他：https://www.webpackjs.com/configuration/target/
+
+
+
+#### module.noParse
+
+```js
+noParse:/jquery/
+```
+
+不解析正则表达式匹配的模块，通常用它来忽略那些大型的单模块库，以提高**构建性能**
+
+
+
+#### resolve
+
+resolve的相关配置主要用于控制模块解析过程
+
+##### modules
+
+```js
+modules:["node_modules"];	//默认值
+```
+
+当解析模块时，如果遇到导入语句，`require("test")`，webpack会从下面的位置寻找依赖的模块
+
+1. 当前目录下的`node_modules`目录
+2. 上级目录下的`node_modules`目录
+3. ...
+
+##### extensions
+
+```js
+extensions:[".js",".json"]	//默认值
+```
+
+当解析模块时，遇到无具体后缀的导入语句，例如```require("test")```，会依次测试它的后缀名
+
+\- test.js
+
+\- test.json
+
+
+
+##### alias
+
+```js
+alias:{
+    "@":path.resolve(__dirname,"src"),
+    "_":dirname
+}
+```
+
+有了alias（别名）后，导入语句中可以添加配置的键名，例如`require(@/abc.js)`，webpack会将其看作是`require(src的绝对路径+ "/abc.js")`。
+
+
+
+在大型系统中，源码结果往往比较深和复杂，别名配置可以让我们更加方便的导入依赖。
+
+
+
+#### externals
+
+```js
+externals:{
+    jquery:"$",
+    lodash:"_"
+}
+```
+
+从最终的bundle中排除掉配置的配置的源码，例如，入口模块是
+
+```js
+//index.js
+require("jquery")
+require("lodash")
+```
+
+生成的bundle是：
+
+```js
+(function(){
+    ...
+})({
+    "./src/index.js": function(module, exports, __webpack_require__){
+        __webpack_require__("jquery")
+        __webpack_require__("lodash")
+    },
+    "jquery": function(module, exports){
+        //jquery的大量源码
+    },
+    "lodash": function(module, exports){
+        //lodash的大量源码
+    },
+})
+```
+
+但有了上面的配置后，则变成了
+
+```js
+(function(){
+    ...
+})({
+    "./src/index.js": function(module, exports, __webpack_require__){
+        __webpack_require__("jquery")
+        __webpack_require__("lodash")
+    },
+    "jquery": function(module, exports){
+        module.exports = $;
+    },
+    "lodash": function(module, exports){
+        module.exports = _;
+    },
+})
+```
+
+这比较适用一些第三方库来自外部CDN的情况，这样一来，即可在页面中适用CDN，又让bundle的体积变得更小，还不影响源码的编写
+
+
+
+#### stats
+
+stats控制的是构建过程中控制台的输出内容
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -934,9 +1386,79 @@ ES6 Module则是看到ImortDeclaration，就知道是也是模块语法，抽出
 
 ## 常用扩展
 
+### 清除输出目录
+
+> clean-webpack-plugin
 
 
 
+### 自动生成页面
+
+> html-webpack-plugin
+
+
+
+### 复制静态资源
+
+> copy-webpack-plugin
+
+
+
+### 开发服务器
+
+> webpack-dev-server
+
+在**开发阶段**，目前遇到的问题是打包、运行、调试过程过于繁琐，回顾一下我们的操作流程：
+
+1. 编写代码
+2. 控制台运行命令完成打包
+3. 打卡页面查看效果
+4. 继续编写代码，回到步骤2
+
+并且，我们往往希望吧最终生成的代码和页面部署到服务器上，来模拟真实环境
+
+
+
+为了解决这些问题，webpack官方制作了一个单独的库：**webpack-dev-server**
+
+它**既不是plugin也不是loaders**
+
+先来看看它怎么用
+
+1. 安装
+
+   ```shell
+   cnpm install webpack-dev-server --D
+   ```
+
+2. 执行`webpack-dev-server`命令
+
+   `webpack-dev-server`命令几乎支持所有的webpack命令参数，如`--config`、`env`等等，你可以把它当做webpack命令使用
+
+这个命令是专门为开发阶段服务的，真正部署的时候还是得使用webpack命令
+
+
+
+当我们执行`webpack-dev-server`命令后，它做了以下操作：
+
+1. 内部执行webpack命令，传递命令参数
+2. 开启watch
+3. 注册hooks：类似于plugin，webpack-dev-server会向webpack中注册一些钩子函数，主要功能如下：
+   1. 将资源列表（assets）保存起来
+   2. 禁止webpack输出文件
+4. 用express开启一个服务器，监听某个端口，当请求到达后，根据请求的路径，给与相应的资源内容
+
+
+
+#### 配置
+
+针对webpack-dev-server的配置，参考：https://www.webpackjs.com/configuration/dev-server/
+
+场景配置有：
+
+- port：配置监听端口
+- proxy：配置代理，常用于跨域访问
+- stats：配置控制台输出内容
 
 
 

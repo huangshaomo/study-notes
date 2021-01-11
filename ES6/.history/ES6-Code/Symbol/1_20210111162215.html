@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let sym = Symbol("My symbol");
+        console.log("your symbol is " + sym);  //TypeError: Cannot convert a Symbol value to a string
+        console.log(`your symbol is ${sym}`);
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对象属性名的遍历</title>
+</head>
+
+<body>
+    <script>
+        const obj = {};
+        const a =Symbol('a');
+        obj[a] = "bar";
+
+        for(let i in obj){
+            console.log(i);     //不执行，连输出都没
+        }
+
+        Object.getOwnPropertyNames(obj)
+
+
+
+        // const obj = {};
+        // let a = Symbol('a');
+        // let b = Symbol('b');
+
+        // obj[a] = "hello";
+        // obj[b] = "world";
+
+        // const Symbol_arr = Object.getOwnPropertySymbols(obj);
+        // console.log(Symbol_arr);
+
+
+    </script>
+</body>
+
+</html>

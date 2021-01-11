@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    <script>
+        let sym = Symbol("foo");
+
+        // 第一种写法
+        let a = {};
+        a[sym] = "hello!";
+
+        // 第二种写法
+        let a = {
+            [sym]:"hello!"
+        }
+
+        //第三种写法
+        let a = {};
+        Object.defineProperty(a,sym,{value:"hello!"});
+
+        //以上写法都得到同样结果
+        a[mySymbol] //"hello!"
+    
+    </script>
+</body>
+
+</html>

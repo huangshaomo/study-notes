@@ -470,7 +470,7 @@ nvm use 版本号	//使用某个版本的nodejs
 
 -通过.exit或执行process.exit()退出REPL交互 
 
-![image-20200414183315028](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200414194050840.png)
+
 
 
 
@@ -530,9 +530,7 @@ switch(argvs[0]){
 }
 ```
 
-![image-20200414194050840](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/LPDemxlpj5.gif)
-
-
+![image-20200414183315028](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200414194050840.png)
 
 **process.env**
 
@@ -598,7 +596,9 @@ setInterval(() => {
 }, 1000/fps);
 ```
 
-<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/nX3R0hdSiY.gif" alt="cTYJ51vNir" style="zoom:80%;" />
+![LPDemxlpj5](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/cTYJ51vNir.gif)
+
+
 
 process.exit()
 
@@ -630,7 +630,9 @@ process.on('SIGINT',()=>{
 })
 ```
 
-![LPDemxlpj5](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/cTYJ51vNir.gif)
+![image-20200414194050840](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/LPDemxlpj5.gif)
+
+
 
 
 
@@ -652,7 +654,7 @@ process.stdout.write(`请输入用户名\n`);
 
 var username = ""//存放成功后的用户名
 
-//on类似与jquery绑定事件的方法，on（data）这段话的意思是，接受用户输入，并在点击触发车时执行回调
+//on类似与jquery绑定事件的方法，on（data）这段话的意思是，接受用户输入，并在点击触发回车时执行回调
 //stdin输入的结果是一个流，不是字符串，因此要先转换成字符串，并且点击回车时，回车也是个输入，也必须去掉
 process.stdin.on('data', (input) => {
     input = input.toString().trim();
@@ -678,7 +680,11 @@ process.stdin.on('data', (input) => {
 })
 ```
 
-![nX3R0hdSiY](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200415095705577.png)
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/nX3R0hdSiY.gif" alt="cTYJ51vNir" style="zoom:80%;" />
+
+
+
+
 
   
 
@@ -704,7 +710,7 @@ process.stdin.on('data', (input) => {
 - npm install devtoll -g
   - 启动： debug 文件名
 
-
+![nX3R0hdSiY](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200415095705577.png)
 
 
 
@@ -1668,7 +1674,7 @@ if($require.cache[filename]){
   //c:\dev
   ```
 
-  ![image-20200416184400347](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/VbVvJc70VG.gif)
+  
 
   __dirname:  `E:\software\VsCode-Code\NodeJS重温\day03`
 
@@ -1718,9 +1724,11 @@ if($require.cache[filename]){
   ```
 
   resolve的操作就像是下面的操作
+  
+  ![image-20200416184400347](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/VbVvJc70VG.gif)
 
 
-![VbVvJc70VG](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200416194056485.png)
+
 
 ​	path.join的操作
 
@@ -1744,7 +1752,7 @@ console.log(path.resolve(__dirname,'..','./day02','./','c:/dev'));
   // 返回: ['foo', 'bar', 'baz']
   ```
 
-  
+  ![VbVvJc70VG](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200416194056485.png)
 
 - **path.win32**
 

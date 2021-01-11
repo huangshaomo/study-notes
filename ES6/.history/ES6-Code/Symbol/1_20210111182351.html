@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对象属性名的遍历</title>
+</head>
+
+<body>
+    <script>
+        // const obj = {};
+        // const a =Symbol('a');
+        // obj[a] = "bar";
+
+        // for(let i in obj){
+        //     console.log(i);     //不执行，连输出都没
+        // }
+        // for(let i of obj){
+        //     console.log(i);     //TypeError: obj is not iterable
+        // }
+
+        // console.log(Object.getOwnPropertyNames(obj));   //[]
+        // console.log(Object.keys()); //TypeError: Cannot convert undefined or null to object
+        // console.log(JSON.stringify());  //undefined
+
+
+
+        // const obj = {};
+        // let a = Symbol('a');
+        // let b = Symbol('b');
+
+        // obj[a] = "hello";
+        // obj[b] = "world";
+
+        // const Symbol_arr = Object.getOwnPropertySymbols(obj);
+        // console.log(Symbol_arr);
+
+
+
+        // let obj = {
+        //     [Symbol('a')] : 1,
+        //     b:2,
+        //     c:3
+        // }
+
+        // console.log(Reflect.ownKeys(obj));  // ["b", "c", Symbol(a)]
+
+        // let size = Symbol('size');
+        // class Collection{
+        //     constructor(){
+        //         this[size] = 0;
+        //     }
+        //     add(item){
+        //         this[this[size]] == item;
+        //         this[size]++;
+        //     }
+        //     static sizeOf(instance){
+        //         return instance[size];
+        //     }
+        // }
+        // let x = new Collection()
+        // Collection.sizeOf(x)    //0
+
+        // x.add('foo');
+        // Collection.sizeOf(x);   //1
+
+        // Object.keys(x)  //[0]
+
+        Symbol.for("bar") === Symbol.for("bar")
+        // true
+
+        Symbol.for("bar") === Symbol("bar")
+        // false
+    </script>
+</body>
+
+</html>
