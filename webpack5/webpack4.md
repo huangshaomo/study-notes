@@ -911,14 +911,32 @@ ES6 Module则是看到ImortDeclaration，就知道是也是模块语法，抽出
 
 入口文件通过entry进行配置。
 
-- name：chunkname
-- hash：总的资源hash，通常用于解决缓存问题
-- chunkhash：使用chunkhash
-- id：使用chunkid，不推荐
+- **name**：chunkname
+- **hash**：总的资源hash，通常用于解决缓存问题，因为hash的特性就是文件内容改变hash才变，把它应用到文件名中，如果内容改变了，hash就会改变，就会导致文件名发生改变，浏览器在缓存中找不到该文件就会重新请求，
+- **chunkhash**：使用chunkhash，同上，不过这个是更精确对应控制每个文件的改变
+- **id**：使用chunkid，不推荐，因为生产环境与开发环境不一致，chunkid在开发环境与chunkname一致，生产环境从数字0开始
 
 
 
 ### 入口和出口的最佳实践
+
+一个页面对应一个出口
+
+> 适用于重复代码不大的情况，因为多页面都引用了公共代码，就会导致每个页面都打包了公共代码，造成打包后的代码体积增大，增加网络传输量
+
+
+
+一个页面多个JS
+
+> 这种使用于某个单独实现的功能，与主代码完全无关，不影响的，就像一个插件，什么时候想用这个功能再引进来,这样做的好处是有利于浏览器更好的单独缓存这部分内容
+
+
+
+单页应用
+
+> 
+
+
 
 
 
@@ -928,7 +946,13 @@ ES6 Module则是看到ImortDeclaration，就知道是也是模块语法，抽出
 
 webpack loader：loader本质上是一个函数，他的作用是将某个源码字符串转换成另一个源码字符串
 
-<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-10-39-24.png" alt="2020-01-13-10-39-24" style="zoom:50%;" />
+```js
+module.exports = function(sourceCode){
+    return ""
+}
+```
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-10-39-24.png" alt="2020-01-13-10-39-24" style="zoom: 80%;" />
 
 loader函数将在模块解析的过程中被调用，以得到最终的源码
 
@@ -948,6 +972,8 @@ loader函数将在模块解析的过程中被调用，以得到最终的源码
 
 <img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-10-29-54.png" alt="2020-01-13-10-29-54" style="zoom:50%;" />
 
+可以看到，把loader加入数组中是从上往下，从左往右的，但执行的时候是从最后一个loader开始的
+
 **完整配置**
 
 ```javascript
@@ -956,11 +982,12 @@ module.exports = {
         rules: [ //模块匹配规则，可以存在多个规则
             { //每个规则是一个对象
                 test: /\.js$/, //匹配的模块正则
-                use: [ //匹配到后应用的规则模块
+                use: [ //匹配到后应用的loaders数组
                     {  //其中一个规则
-                        loader: "模块路径", //loader模块的路径，该字符串会被放置到require中，所以loader不用手动require();
+                        loader: "加载器的路径", //loader模块的路径，该字符串会被放置到require中，所以loader不用手动require();
                         options: { //向对应loader传递的额外参数
-
+							//这里的参数会传递给loader函数的this中，但this中的东西太多太多，所以需要用一个模块`loader-utils`去解析出this上下文中的options参数,参数也可以以get请求的形式拼接到loader路径中
+                           //如"loader?changeVar = 未知数"
                         }
                     }
                 ]
@@ -969,6 +996,23 @@ module.exports = {
     }
 }
 ```
+
+```js
+var loaderUtils = require("loader-utils");
+module.exports = function(sourceCode){
+    console.log("test-loader运行了");
+    var options = loaderUtils.getOptions(this);
+    console.log(options);
+    var reg = new RegExp(options.changeVar,"g")
+    return sourceCode.replace(reg,"var");
+}
+```
+
+
+
+
+
+
 
 
 
@@ -986,6 +1030,25 @@ module.exports = {
     }
 }
 ```
+
+
+
+过程总结：
+
+1. 文件内容被读取处理过后，首先从配置里看loaders，查看该模块是否满足规则(读取规则中的test属性)，如果匹配到后，就会分别使用use数组中的loader，然后就会把文件内容从右往左分别使用每一个loader去依次处理（下一个loader会使用上一个loader返回的结果继续进行处理），最终会把处理后的源码交给抽象语法树进行分析模块依赖。
+
+总的就是说loader可以改动我们的源代码，把我们的源代码变成任何形式
+
+
+
+总结：
+
+- loader(加载器)只需要配置路径，该路径会在该加载器被使用时调用require()函数去请求
+- 
+
+问题：loader中是否可以使用ES6 Module?
+
+答案是不行，因为Loader代码是**运行**在webpack编译阶段，注意是运行在webpack的编译阶段，而编译阶段webpack是处于node环境中，node不支持ES6 Module规范，而为什么在源码中使用ES6 Module就可以，就是因为源代码并不会在编译阶段运行，只是被AST抽象语法树分析模块依赖而已。然后把ES6 Module的模块语法转换成webpack内部封装的\__webpack_require__导入规范而已。
 
 
 
