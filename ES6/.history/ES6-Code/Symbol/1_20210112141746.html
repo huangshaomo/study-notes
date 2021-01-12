@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对象属性名的遍历</title>
+</head>
+
+<body>
+    <script>
+        // Symbol.hasIntance
+        class MyClass{
+            [Symbol.hasInstance](foo){
+                return foo instanceof Array
+            }
+        }
+
+        console.log([1,2,3] instanceof new MyClass(););
+
+
+
+
+
+
+
+    </script>
+</body>
+
+</html>

@@ -895,7 +895,7 @@ ES6 Module则是看到ImortDeclaration，就知道是也是模块语法，抽出
 
 #### 出口
 
-这里的出口是针对资源列表的文件名或路径的配置，也就是总的chunk assets阶段，出口配置会在这个阶段生效，决定着使用node文件生成的文件名与存放路径
+这里的出口是针对资源列表的文件名或路径的配置，也就是总的chunk assets阶段，出口配置会在这个阶段生效，决定着使用node生成的文件名与存放路径
 
 ![Typora_HWbVVn1G48](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Typora_HWbVVn1G48.png)
 
@@ -911,6 +911,12 @@ ES6 Module则是看到ImortDeclaration，就知道是也是模块语法，抽出
 
 入口文件通过entry进行配置。
 
+
+
+
+
+规则：
+
 - **name**：chunkname
 - **hash**：总的资源hash，通常用于解决缓存问题，因为hash的特性就是文件内容改变hash才变，把它应用到文件名中，如果内容改变了，hash就会改变，就会导致文件名发生改变，浏览器在缓存中找不到该文件就会重新请求，
 - **chunkhash**：使用chunkhash，同上，不过这个是更精确对应控制每个文件的改变
@@ -920,21 +926,124 @@ ES6 Module则是看到ImortDeclaration，就知道是也是模块语法，抽出
 
 ### 入口和出口的最佳实践
 
-一个页面对应一个出口
+下面是一些经典场景
 
-> 适用于重复代码不大的情况，因为多页面都引用了公共代码，就会导致每个页面都打包了公共代码，造成打包后的代码体积增大，增加网络传输量
+
+
+**一个页面对应一个JS**
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-10-12-00-28.png" alt="2020-01-10-12-00-28" style="zoom: 67%;" />
+
+源码结构
+
+```shell
+|—— src
+    |—— pageA   页面A的代码目录
+        |—— index.js 页面A的启动模块
+        |—— ...
+    |—— pageB   页面B的代码目录
+        |—— index.js 页面B的启动模块
+        |—— ...
+    |—— pageC   页面C的代码目录
+        |—— main1.js 页面C的启动模块1 例如：主功能
+        |—— main2.js 页面C的启动模块2 例如：实现访问统计的额外功能
+        |—— ...
+    |—— common  公共代码目录(文件页面都需要引入的)
+        |—— ...
+```
+
+webapck配置
+
+```js
+module.exports = {
+    entry:{
+        pageA: "./src/pageA/index.js",
+        pageB: "./src/pageB/index.js",
+        pageC: ["./src/pageC/main1.js", "./src/pageC/main2.js"]
+    },
+    output:{
+        filename:"[name].[chunkhash:5].js"
+    }
+}
+```
+
+> 这种方式适用于重复代码不大的情况，因为多页面都引用了公共代码，就会导致每个页面都会去打包公共代码，造成打包后的代码体积增大，增加网络传输量
 
 
 
 一个页面多个JS
 
-> 这种使用于某个单独实现的功能，与主代码完全无关，不影响的，就像一个插件，什么时候想用这个功能再引进来,这样做的好处是有利于浏览器更好的单独缓存这部分内容
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-10-12-38-03.png" alt="2020-01-10-12-38-03" style="zoom:67%;" />
+
+源码结构
+
+```shell
+|—— src
+    |—— pageA   页面A的代码目录
+        |—— index.js 页面A的启动模块
+        |—— ...
+    |—— pageB   页面B的代码目录
+        |—— index.js 页面B的启动模块
+        |—— ...
+    |—— statistics   用于统计访问人数功能目录
+        |—— index.js 启动模块
+        |—— ...
+    |—— common  公共代码目录(文件页面都需要引入的)
+        |—— ...
+```
+
+webpack配置
+
+```js
+module.exports = {
+    entry:{
+        pageA: "./src/pageA/index.js",
+        pageB: "./src/pageB/index.js",
+        pageC: "./src/statistics/index.js"
+    },
+    output:{
+        filename:"[name].[chunkhash:5].js"
+    }
+}
+```
+
+> 这种适用于某个独立实现的功能，与主代码完全无关，不影响的，就像一个插件，什么时候想用这个功能再引进来,单独使用一个chunk抽离这部分JS的好处是有利于浏览器更好的单独缓存这部分内容
+
+思考一下：为什么不使用多启动模块的方式？
+
+答：首先该模块并不跟其他模块产生依赖，即使与其他文件 一起打包，但其他文件没有引入它，就无法分析出依赖，从而白白增大了打包体积，增加了网络传输量，且该模块还不会被用到
 
 
 
 单页应用
 
-> 
+> 所谓单页应用，是指整个网站（或网站的某一个功能块）只有一个页面，页面中的内容全部靠JS创建和控制。 vue和react都是实现单页应用的利器。
+
+源码结构
+
+```shell
+|—— src
+    |—— subFunc   子功能目录
+        |—— ...
+    |—— subFunc   子功能目录
+        |—— ...
+    |—— common  公共代码目录
+        |—— ...
+    |—— index.js
+```
+
+webpack配置
+
+```js
+module.exports = {
+    entry:{
+        main:"./src/index.js"
+    },
+    output:{
+        filename:"[name].[chunkhash:5].js"
+    }
+}
+```
 
 
 
@@ -956,7 +1065,7 @@ module.exports = function(sourceCode){
 
 loader函数将在模块解析的过程中被调用，以得到最终的源码
 
-**全流程：**
+#### 全流程：
 
 ![2020-01-13-09-28-52](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-09-28-52.png)
 
@@ -973,6 +1082,237 @@ loader函数将在模块解析的过程中被调用，以得到最终的源码
 <img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-10-29-54.png" alt="2020-01-13-10-29-54" style="zoom:50%;" />
 
 可以看到，把loader加入数组中是从上往下，从左往右的，但执行的时候是从最后一个loader开始的
+
+
+
+#### 验证loader在AST之前
+
+比如我们想使用“变量”作为声明关键字，而不使用var变量声明，当然在weback编译阶段肯定会报错的，因为在AST抽象语法树在分析依赖时无法识别这样的代码，就会抛出无法识别。
+
+```js
+//index.js
+变量 a = 10
+变量 b = 20
+变量 c = 30
+```
+
+![Code_nWfp4slGeP](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Code_nWfp4slGeP.png)
+
+![Code_U9t6dpDlzc](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Code_U9t6dpDlzc.png)
+
+因此我们就希望能在进入AST抽象语法树进行依赖分析之前，先将“变量”转换为“var”，再把转换后的源码给AST进行分析就不会报错了。
+
+而loader，就是专门负责干这种事的，就是在进行AST抽象语法树进行依赖分析之前，把源码转换成另一种源码后返回给AST进行分析，最终AST在使用的经过loader转换后的源码进行的依赖分析就不会报错了。（loader就是这么简单，别想的太复杂!）
+
+
+
+首先声明一个**my-loader**，负责把关键字"变量"替换为var
+
+```js
+module.exports = function(sourceCode){  //sourceCode保存匹配到规则文件的代码
+    console.log("my-loader运行了");
+    return sourceCode.replace(/变量/g,"var");
+}
+```
+
+webpack去配置规则，给这个文件应用**my-loader**
+
+```js
+module.exports = {
+    module:{
+        rules:[
+            {
+                test: /\.js$/,
+                use:["./loaderFunc/my-loader.js"]//加载器被使用时会自动调用require()函数去请求
+            }
+        ]
+    }
+}
+```
+
+使用webpack执行，再看一下webpack编译过后的文件，”变量“成功替换成了var
+
+![Code_hkIMJRo1Jx](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Code_hkIMJRo1Jx.png)
+
+而且可以看到webpack也已经成功打包了
+
+![Code_48DUjaufAd](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Code_48DUjaufAd.png)
+
+
+
+虽然已经成功打包了，但这个loader未免有些局限，比如像下面这样，我们替换了变量声明的关键字，此时该loader就不生效了
+
+```js
+未知数 a = 10
+未知数 b = 20
+未知数 c = 30
+```
+
+因为，为了提升loader的可用性，我们可以使用传递loaders参数的形式去拓展它，即如果我们替换了变量声明的关键字，可以在参数中方便的调整它 。比如
+
+```js
+module.exports = {
+    entry:{
+        index:"./src/index.js"
+    },
+    output:{
+        filename: "[name].[hash:5].js"
+    },
+    module:{
+        rules:[
+            {
+                test: /\.js$/,
+                use:{
+                    //必须写完整相对路径，否则会从node_module中找该loader
+                    loader:"./myLoaders/my-loader.js",
+                    options: {
+                        changeVar:"未知数"
+                    }
+                }
+            }
+        ]
+    }
+}
+```
+
+> options参数会传递到my-oader函数的this上下文中，不够由于this中的东西太多，因此需要用一个模块`loader-utils`去方便的帮我们解析出this上下文中的options参数。
+>
+> 参数这里也可以以get请求的形式拼接到loader路径中，如loader:"./myLoaders/my-loader?changeVar=未知数",照样会放入到options中，只不过上面的是标准写法。
+
+
+
+**my-loader**
+
+```js
+var loaderUtils = require("loader-utils");
+module.exports = function(sourceCode){  //sourceCode保存匹配到规则文件的代码
+    console.log("my-loader运行了");
+    var options = loaderUtils.getOptions(this);
+    console.log(options);
+    var reg = new RegExp(options.changeVar,"g")
+    return sourceCode.replace(reg,"var");
+}
+```
+
+再看一下webpack编译过后的文件，”未知数“成功替换成了var
+
+![Code_hkIMJRo1Jx](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Code_hkIMJRo1Jx.png)
+
+而且可以看到webpack也已经成功打包了
+
+![Code_krK4fu7bXD](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Code_krK4fu7bXD.png)
+
+
+
+**这样就足以说明AST抽象语法树进行依赖分析使用的是loader返回的源码进行分析的。**
+
+
+
+#### 验证loader的执行顺序
+
+首先我们声明4个loader
+
+```js
+//loader1,js
+module.exports = function(sourceCode){
+    console.log('loader1执行了');
+    return sourceCode;
+}
+//loader2,js
+module.exports = function(sourceCode){
+    console.log('loader2执行了');
+    return sourceCode;
+}
+//loader3,js
+module.exports = function(sourceCode){
+    console.log('loader3执行了');
+    return sourceCode;
+}
+//loader4,js
+module.exports = function(sourceCode){
+    console.log('loader4执行了');
+    return sourceCode;
+}
+```
+
+webpack配置
+
+```js
+module.exports = {
+    mode: "development",
+    module: {
+        rules: [
+            {
+                test: /index\.js$/, //正则表达式，匹配模块的路径
+                use: ["./myLoaders/loader1", "./myLoaders/loader2"] //匹配到了之后，使用哪些加载器loader(加载器)，加载器被使用时会自动调用require()函数去请求
+            }, //规则1
+            {
+                test: /\.js$/, //正则表达式，匹配模块的路径
+                use: ["./myLoaders/loader3", "./myLoaders/loader4"] //匹配到了之后，使用哪些加载器loader(加载器)，加载器被使用时会自动调用require()函数去请求
+            } //规则2
+        ], //模块的匹配规则
+    }
+}
+```
+
+可以看到loader的执行顺序如下
+
+![Code_cDMfkvp7hg](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Code_cDMfkvp7hg.png)
+
+执行顺序与我们的书写顺序刚好是相反的。但这样描述并不准确。
+
+让我们再根据这张图来分析
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/2020-01-13-10-29-54.png" alt="2020-01-13-10-29-54" style="zoom:50%;" />
+
+
+
+根据上面规则，我们可以理解为：
+
+1. 维护了一个存在loader的空数组
+
+2. webpack会根据rules的执行顺序**从下往上**去读取当前模块是否满足某个规则
+
+3. 首先读取了规则【/index\\.js$/】满足，然后读取该规则中对应的loader，并放入到空数组中。此时空数组 如下
+
+   ["./myLoaders/loader1", "./myLoaders/loader2"]
+
+4. 然后再接着判断当前模块是否还满足某个规则，发现该模块也满足规则【/\\.js$/】,然后继续读取该规则中对应的loader，并放入到空数组中。此时空数组 如下
+
+   ["./myLoaders/loader1", "./myLoaders/loader2","./myLoaders/loader3", "./myLoaders/loader4"]
+
+5. 最后把文件内容从右往左分别使用每一个loader去依次处理（下一个loader会使用上一个loader返回的结果继续进行处理），生成最终的源码，返回给AST抽象语法树进行依赖分析。
+
+
+
+因此：**webpack解析loader解析顺序是不变的（从上到下，从左到右），但loaders数组中的loader的执行是从右往左依此执行的。**
+
+
+
+#### 总过程总结：
+
+文件内容被读取处理过后，首先从配置里看loaders，查看该模块是否满足规则(读取规则中的test属性)，如果匹配到后，就会分别使用use数组中的loader，然后就会把文件内容从右往左分别使用每一个loader去依次处理（下一个loader会使用上一个loader返回的结果继续进行处理），最终会把处理后的源码交给抽象语法树进行分析模块依赖。
+
+**总的就是说loader可以改动我们的源代码，把我们的源代码变成任何形式**
+
+
+
+####问题：loader中是否可以使用ES6 Module?
+
+答案是不行，因为Loader代码是**运行**在webpack编译阶段，注意是运行在webpack的编译阶段，而编译阶段webpack是处于node环境中，node不支持ES6 Module规范，而为什么在源码中使用ES6 Module就可以，就是因为源代码并不会在编译阶段运行，只是被AST抽象语法树分析模块依赖而已。然后把ES6 Module的模块语法转换成webpack内部封装的\__webpack_require__导入规范而已。
+
+
+
+#### 总结
+
+1. loader不需要使用require()引入，会在loader被使用时主动调用require()函数去请求该loader
+2. loader的参数会被注入到loader函数的this上下文中。
+3. webpack中loader的规则分析是从上往下的，从左往右的，但loader的执行是从右往左的
+4. loader的执行阶段在读取文件内容之后，AST抽象语法树之前
+5. loader执行在编译期间，所以只能使用CommonJS语法，因此webpack在编译阶段使用的是node环境。
+6. AST分析的源码文件在编译阶段是不会被执行的，AST只是分析文件依赖关系而已。
+
+
 
 **完整配置**
 
@@ -997,25 +1337,6 @@ module.exports = {
 }
 ```
 
-```js
-var loaderUtils = require("loader-utils");
-module.exports = function(sourceCode){
-    console.log("test-loader运行了");
-    var options = loaderUtils.getOptions(this);
-    console.log(options);
-    var reg = new RegExp(options.changeVar,"g")
-    return sourceCode.replace(reg,"var");
-}
-```
-
-
-
-
-
-
-
-
-
 **简化配置**
 
 ```javascript
@@ -1030,25 +1351,6 @@ module.exports = {
     }
 }
 ```
-
-
-
-过程总结：
-
-1. 文件内容被读取处理过后，首先从配置里看loaders，查看该模块是否满足规则(读取规则中的test属性)，如果匹配到后，就会分别使用use数组中的loader，然后就会把文件内容从右往左分别使用每一个loader去依次处理（下一个loader会使用上一个loader返回的结果继续进行处理），最终会把处理后的源码交给抽象语法树进行分析模块依赖。
-
-总的就是说loader可以改动我们的源代码，把我们的源代码变成任何形式
-
-
-
-总结：
-
-- loader(加载器)只需要配置路径，该路径会在该加载器被使用时调用require()函数去请求
-- 
-
-问题：loader中是否可以使用ES6 Module?
-
-答案是不行，因为Loader代码是**运行**在webpack编译阶段，注意是运行在webpack的编译阶段，而编译阶段webpack是处于node环境中，node不支持ES6 Module规范，而为什么在源码中使用ES6 Module就可以，就是因为源代码并不会在编译阶段运行，只是被AST抽象语法树分析模块依赖而已。然后把ES6 Module的模块语法转换成webpack内部封装的\__webpack_require__导入规范而已。
 
 
 

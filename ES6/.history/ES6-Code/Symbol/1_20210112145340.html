@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>对象属性名的遍历</title>
+</head>
+
+<body>
+    <script>
+        // Symbol.hasIntance
+        // class MyClass{
+        //     [Symbol.hasInstance](foo){
+        //         return foo instanceof Array
+        //     }
+        // }
+        // console.log(new MyClass());
+        // console.log([1,2,3] instanceof new MyClass());
+
+
+        class Even{
+            // static [Symbol.hasInstance](foo){
+            //     return Number(foo) % 2 === 0
+            // }
+        }
+        console.dir(Even);
+        var e = new Even;
+        console.dir(e);
+        console.log( typeof Even);
+        console.log(e instanceof Even);
+        console.log(2 instanceof Even);
+        console.log(3 instanceof Even);
+
+
+        function instance_of(L,R){
+            // l代表操作符左侧的实例对象，r代表操作符右侧的构造函数
+            while(L.__proto__ !== null){
+                console.log(L.__proto__ ,R.prototype);
+                if(L.__proto__ === R.prototype){
+                    console.log('执行了');
+                    return true
+                }
+                L = L.__proto__
+            }
+            return false;
+        }
+        instance_of(e,Even)
+
+
+
+
+    </script>
+</body>
+
+</html>
