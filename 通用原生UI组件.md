@@ -336,6 +336,51 @@ a{color: #fff; text-decoration: none;}
 </ul>
 ```
 
+最新菜单栏
+
+```html
+<style>
+/*默认二级下拉导航菜单*/
+#nav{width: 800px; border: 1px solid #ccc;}
+#nav li{position: relative; float: left; cursor: pointer;}
+#nav > li{height: 60px; line-height: 60px;}
+#nav li a{line-height: 20px;}
+#nav li ul{position: absolute; display: block; opacity: 0;  visibility: hidden;  left: 0px; top: 80px; width: 120px;  opacity: 0; background: #fff; transition: all ease-in-out .3s; padding: 15px 0px; z-index: 9999;}
+#nav>li>ul{overflow: hidden;}
+/* 二级 */
+#nav li ul li{line-height: 1; line-height: 24px; padding: 10px 0px;}
+
+/*一级动效*/
+#nav li:hover > a{color: #28ae65;}
+#nav li:hover > ul{ opacity: 1; top: 60px; visibility: visible;}
+/*二级动效*/
+</style>
+<div class="menu">
+	<ul id="nav" class="nav clearFix">
+		<li><a href="">首页</a></li>
+		<li><a href="">申请书</a></li>
+		<li><a href="">成果总结</a>
+			<ul>
+				<li><a href="">成果总结1</a></li>
+				<li><a href="">成果总结1</a></li>
+				<li><a href="">成果总结1</a></li>
+			</ul>
+		</li>
+		<li><a href="">成果鉴定</a>
+			<ul>
+				<li><a href="">成果总结1</a></li>
+				<li><a href="">成果总结1</a></li>
+				<li><a href="">成果总结1</a></li>
+			</ul>
+		</li>
+		<li><a href="">推广应用</a></li>
+		<li><a href="">证明材料</a></li>
+		<li><a href="">廉政鉴定</a></li>
+		<li><a href="">联系我们</a></li>
+	</ul>
+</div>
+```
+
 
 
 ### 5. 动态搜索栏
@@ -589,50 +634,128 @@ width必须要给父级设置width，否则只会向右伸展
 
 ```html
 <style>
-/* 通用选项卡功能 */
-.header-area{border-bottom: 1px solid #e4e4e4; height: 60px; box-sizing: border-box; background: #fff; width: 100%; transition: all linear .8s; line-height: 60px;}
-.header-area.bg-transparent{background: transparent;}
-.tabs-header{position: relative;  display: inline-block;}
-.tabs-title{ display: inline-block; height: 40px; color: #666; position:relative; font-size:18px;}
-.tabs-scrollbar{position: absolute; left: 0px; bottom: 4px; content: ""; width: 55px; height: 2px; background-color: #c74038; transition: all ease-out .2s !important;}
-.tabs-title li{box-sizing: border-box;float: left; text-align: center; margin-right: 100px; padding-bottom: 13px; cursor: pointer;  transition: none !important; }
-.tabs-title li.active-title{font-weight:bolder; }
-#home .tabs-title li.active-title{color:#c74038;}
-.tabs-title li + li +li{margin-right: 0px;}
-.tabs-title li:last-of-type{margin-right: 0px;}
-.tabs-content{width: 100%; height: 600px; padding-top: 60px;}
-.tabs-content .tab-box{width: 100%; height: 390px;}
-.tabs-content .tab-box{display: none;}
-.dev-content .tabs-title li.active-title{color:#333; font-size:18px!important; transform: translateY(-5px); font-weight:bolder}
-.tabs-content li.active-content{display: block;}
+	.tabs-content li{display: none;}
+    .tabs-content li.active-content{display: block;}
 </style>
-<div class="header-area">
-    <div class="tabs-header">
-        <ul class="tabs-title">
-            <li class="tab-title active-title">产品</li>
-            <li class="tab-title">解决方案</li>
-            <li class="tab-title">服务</li>
-        </ul>
-        <div class="tabs-scrollbar"></div>
-    </div>
+<div class="tabs">
+    <ul class="tabs-title">
+        <li></li>
+        <li></li>
+    </ul>
+    <ul class="tabs-content">
+        <li></li>
+        <li></li>
+    </ul>
 </div>
-<ul class="tabs-content">
-    <li class="tab-box active-content"></li>
-    <li class="tab-box"> </li>
-</ul>
 ```
 
 ```javascript
-$('.tabs-title').on('click', 'li', function (event) {
-    var target = $(event.target);
-    var curIndex = target.index();
-    var scrollLeft = $('.tabs-title .tab-title').eq(curIndex).position().left;
-    var targetW = target.outerWidth()
-    $('.tabs-content .tab-box').removeClass('active-content').eq(curIndex).addClass('active-content');
-    $('.tabs-title .tab-title').removeClass('active-title').eq(curIndex).addClass('active-title');
-    $('.tabs-scrollbar').css({left:scrollLeft,width:targetW})
-})
+function Tabs(options){
+    if(!options || !options.wrapper) throw new Error('必须指定一个容器');
+    var baseObj = {
+        wrapper:'.tabs',
+        eventType:'click',
+    }
+    this.options = Object.assign({},baseObj,options);
+    this.wrapper = options.wrapper && $(options.wrapper);
+    this.tabs_title = this.wrapper.find('.tabs-title');
+    this.tabs_content = this.wrapper.find('.tabs-content');
+    this.count = this.tabs_title.find('li').length;
+    this.curIndex = null;
+    // 1.初始化：给第一个元素活跃
+    this.init()
+    // 2.绑定事件
+    this.bindEvent() 
+}
+Tabs.prototype.init = function(tabs_title,tabs_content){
+    this.tabs_title.find('li:eq(0)').addClass('active-title');
+    this.tabs_content.find('li:eq(0)').addClass('active-content');
+    this.curIndex = 0;
+}
+Tabs.prototype.bindEvent = function(){
+    var _this = this;
+    this.tabs_title.on(this.options.eventType, 'li',function(){
+        var target = $(event.target);
+        var curIndex = target.index();
+        // 3. 指定第几个活跃
+        _this.tabTo(curIndex);
+    })
+}
+Tabs.prototype.tabTo = function(curIndex){
+    //临界值判断,不能大于总数-1,不能小于0
+    curIndex = curIndex < 0 ? 0: curIndex >=0 && curIndex > this.count -1 ? this.count -1 : curIndex;
+    this.tabs_title.find('li').removeClass('active-title').eq(curIndex).addClass('active-title');
+    this.tabs_content.find('li').removeClass('active-content').eq(curIndex).addClass('active-content');
+    return curIndex;
+}
+var tab1 = new Tabs({
+    wrapper:'.tabs'
+}) 
 ```
+
+```js
+//新增功能：新增生命周期函数，tabBefore，tabEnd，分别在切换活跃元素前后触发。新增tabPrev，tabNext函数，可手动调用函数触发活跃元素切换
+function Tabs(options){
+    if(!options || !options.wrapper) throw new Error('必须指定一个容器');
+    var baseObj = {
+        wrapper:'.tabs',
+        eventType:'click',
+    }
+    this.options = Object.assign({},baseObj,options);
+    this.wrapper = options.wrapper && $(options.wrapper);
+    this.tabs_title = this.wrapper.find('.tabs-title');
+    this.tabs_content = this.wrapper.find('.tabs-content');
+    this.count = this.tabs_title.find('li').length;
+    this.curIndex = null;
+    // 1.初始化：给第一个元素活跃
+    this.init()
+    // 2.绑定事件
+    this.bindEvent() 
+}
+Tabs.prototype.init = function(tabs_title,tabs_content){
+    this.tabs_title.find('li:eq(0)').addClass('active-title');
+    this.tabs_content.find('li:eq(0)').addClass('active-content');
+    this.curIndex = 0;
+}
+Tabs.prototype.bindEvent = function(){
+    var _this = this;
+    this.tabs_title.on(this.options.eventType, 'li',function(){
+        var target = $(event.target);
+        var curIndex = target.index();
+        // 3. 指定第几个活跃
+        _this.tabTo(curIndex);
+    })
+}
+Tabs.prototype.tabTo = function(curIndex){
+    //临界值判断,不能大于总数-1,不能小于0
+    curIndex = curIndex < 0 ? 0: curIndex >=0 && curIndex > this.count -1 ? this.count -1 : curIndex;
+    this.options.tabBefore && this.options.tabBefore()
+    this.tabs_title.find('li').removeClass('active-title').eq(curIndex).addClass('active-title');
+    this.tabs_content.find('li').removeClass('active-content').eq(curIndex).addClass('active-content');
+    this.options.tabEnd && this.options.tabEnd()
+    return curIndex;
+}
+Tabs.prototype.tabPrev = function(){
+    return this.tabTo(this.curIndex - 1)
+}
+Tabs.prototype.tabNext = function(){
+    return this.tabTo(this.curIndex + 1)
+}
+var tab1 = new Tabs({
+    wrapper:'.tabs',
+    eventType:'mouseover',
+    tabBefore:function(){
+        console.log('tabBefore执行了');
+    },
+    tabEnd:function(){
+        console.log('tabEnd执行了');
+    }
+}) 
+```
+
+
+
+
 
 #### 下拉选项卡菜单
 
