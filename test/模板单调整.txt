@@ -54,6 +54,13 @@ templates/001lt198/images/link1-icon-#autoid.png
     })
 </script>
 
+    <div class="swiper-slide">
+        <a href="#link" target="_blank">
+            <p class="text">#title</p>
+            <img src="#img_url" alt="">
+        </a>
+    </div>
+
 
 
 
