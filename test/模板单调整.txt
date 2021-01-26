@@ -1,0 +1,84 @@
+
+1. 菜单栏自适应
+
+2. 背景图名称改为banner.png，也注意css，然后about.xml中<banner>标签替换如下
+  <banner width="980" height="160">
+     <item>/templates/001lt198/images/banner.png</item>
+  </banner>
+
+<img src="{$banner}" class="banner-img"/>
+.header-content > img.banner-img{width: 1200px; height: 100px;}
+
+3. 快速链接固定图片
+templates/001lt198/images/link1-icon-#autoid.png
+
+4. 如果背景图有flash动画，去掉
+
+
+5. 模板轮播图
+  <link rel="stylesheet" href="css/idangerous.swiper.css">     
+<style>
+	    .swiper-container{box-sizing: border-box; height: 270px;width: 960px;border:  1px solid #CACACA;}
+    .swiper-wrapper .text{width: 100%; box-sizing: border-box; padding: 0 20px; text-align: center; background-color: rgba(236, 184, 92, .7); font-size: 12px; color: #fff; position: absolute; top: 0; left: 0; white-space: nowrap; overflow: hidden;text-overflow: ellipsis; height: 20px; line-height: 20px;}
+    .swiper-container img{width:100%; height: 100%;}
+    .swiper-slide a{width: 100%; height: 100%; display: block;}
+    .swiper-slide{position: relative;}
+    .hdp .pagination{position: absolute;bottom: 10px; left: 0;right: 0;margin: auto;text-align: center;}
+    .hdp .pagination span{
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #fff;
+        margin: 0 5px;
+        border-radius: 50%;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+    .hdp .pagination span.swiper-active-switch{
+        background-color: #fff;
+    }
+</style>
+ <div class="swiper-container hdp">
+        <div class="swiper-wrapper">
+          {$ltcms_slide}
+        </div>
+        <div class="pagination"></div>
+      </div>
+  <script src="js/idangerous.swiper.min.js"></script>
+  <script>
+    var mySwiper = new Swiper('.swiper-container', {
+        pagination: '.pagination',
+        autoplay: 5000,//可选选项，自动滑动
+        loop: true,//可选选项，开启循环
+        paginationClickable: true,
+    })
+</script>
+
+
+
+
+
+
+
+
+
+
+
+替换
+$(function () {
+    var items = document.querySelectorAll('#nav > li > a');
+    if(items > 0){
+        updateItemPadding(items, 970);
+    }   
+})
+
+    var items = document.querySelectorAll('#nav > li > a');
+    if(items.length > 0){
+        updateItemPadding(items, 970);
+    }   
+
+
+替换
+(/\d+(\.\d+|\d+)/
+
+(/\d+(\.\d+|\d+)?/

@@ -1,0 +1,85 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>{$网站标题}</title>
+<meta name="keywords" content="{$网站关键字}">
+<meta name="description" content="{$网站描述}">
+<meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" /> 
+<link rel="stylesheet" type="text/css" href="css/main.css" />
+<link rel="stylesheet" href="css/idangerous.swiper.css">    
+<style>
+    .swiper-container{box-sizing: border-box; height: 380px;width: 1200px;border:  1px solid #CACACA;}
+    .swiper-wrapper .text{width: 100%; box-sizing: border-box; padding: 0 20px; text-align: center; background-color: rgba(236, 184, 92, .7); font-size: 12px; color: #fff; position: absolute; top: 0; left: 0; white-space: nowrap; overflow: hidden;text-overflow: ellipsis; height: 20px; line-height: 20px;}
+    .swiper-container img{width:100%; height: 100%;}
+    .swiper-slide a{width: 100%; height: 100%; display: block;}
+    .swiper-slide{position: relative;}
+    .hdp .pagination{position: absolute;bottom: 10px; left: 0;right: 0;margin: auto;text-align: center;}
+    .hdp .pagination span{
+        display: inline-block;
+        width: 10px;
+        height: 10px;
+        border: 1px solid #fff;
+        margin: 0 5px;
+        border-radius: 50%;
+        box-sizing: border-box;
+        cursor: pointer;
+    }
+    .hdp .pagination span.swiper-active-switch{
+        background-color: #fff;
+    }
+</style>
+<!--[if lte IE 9]>
+<style>
+  .index-nav ul li a:hover{
+    background-color: #fff;
+}
+</style>
+<![endif]-->
+</head>
+<body>
+<!--头部-->
+<!--#include file="header.html"-->
+<!--头部-->
+
+<div class="main">
+<div class="content">
+
+    <!--S slide-->
+        <div class="swiper-container hdp">
+            <div class="swiper-wrapper">
+              {$ltcms_slide}
+            </div>
+            <div class="pagination"></div>
+          </div>
+    <!--E slide-->
+
+    <div class="index-nav">
+      <ul>
+          <li class="area1"><a href="{$区域1地址}" ><span>{$区域1标题}</span></a></li>
+          <li class="area2"><a href="{$区域2地址}" ><span>{$区域2标题}</span></a></li>
+          <li class="area3"><a href="{$区域3地址}" ><span>{$区域3标题}</span></a></li>
+          <li class="area4"><a href="{$区域4地址}" ><span>{$区域4标题}</span></a></li>
+          <li class="area5"><a href="{$区域5地址}" ><span>{$区域5标题}</span></a></li>
+          <li class="area6"><a href="{$区域6地址}" ><span>{$区域6标题}</span></a></li>
+          <li class="area7"><a href="{$区域7地址}" ><span>{$区域7标题}</span></a></li>
+          <li class="area8"><a href="{$区域8地址}" ><span>{$区域8标题}</span></a></li>
+      </ul> 
+    </div>
+</div>
+</div>
+<!--尾部-->
+<!--#include file="footer.html"--> 
+<!--尾部-->
+<script src="js/idangerous.swiper.min.js"></script>
+<script>
+    var mySwiper = new Swiper('.swiper-container', {
+        pagination: '.pagination',
+        autoplay: 5000,//可选选项，自动滑动
+        loop: true,//可选选项，开启循环
+        paginationClickable: true,
+    })
+</script>
+</body>
+</html>
+

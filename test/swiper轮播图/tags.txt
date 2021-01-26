@@ -1,0 +1,26 @@
+<tag>
+    <id>202011181832563887</id>
+    <nick>slide2</nick>
+    <name>{$ltcms_slide2}</name>
+    <type>7</type>
+    <origin>    &lt;div class="swiper-slide"&gt;
+        &lt;a href="#link" target="_blank"&gt;
+            &lt;p class="text"&gt;#title&lt;/p&gt;
+            &lt;img src="#img_url" alt=""&gt;
+        &lt;/a&gt;
+    &lt;/div&gt;</origin>
+    <suborigin>
+    </suborigin>
+    <context>&lt;%set DataTable slide2=get_article_list(channel_id,0, 0, "status=0 and is_recyle=0 and is_slide=1  and channel_id="+channel_id,"sort_id asc,add_time desc")%&gt;
+&lt;%foreach(DataRow dr in slide2.Rows)%&gt;
+    &lt;div class="swiper-slide"&gt;
+        &lt;a href="&lt;%showLinkUrl({dr[category_id]},{dr[id]})%&gt;" target="_blank"&gt;
+            &lt;p class="text"&gt;&lt;%write getTitle({strtoint({dr[id]})},0)%&gt;&lt;/p&gt;
+            &lt;img src="&lt;%write getSlide({strtoint({dr[id]})})%&gt;" alt=""&gt;
+        &lt;/a&gt;
+    &lt;/div&gt;
+&lt;%/foreach%&gt;
+</context>
+    <tagparameter>slide2°Ïslide2°Ïall°Ï°ÏTrue°Ï0°Ï0°Ï0°Ï</tagparameter>
+    <addtime>2021/1/5 11:20:40</addtime>
+  </tag>

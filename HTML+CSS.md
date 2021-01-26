@@ -1369,7 +1369,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
 
 
 
-- **text-top**：该元素的top与父元素的text-top(顶线)对齐
+- **text-top**：该元素的top（content-area顶部）与父元素的text-top(顶线)对齐
 
   ```html
   .span1{
@@ -1377,7 +1377,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
   }
   ```
 
-  
+  ![360chrome_YWuozMxSgK](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_YWuozMxSgK.png)
 
   ![image-20200429192347714](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429192347714.png)
 
@@ -1389,7 +1389,7 @@ content-area > virtual-area出导致出现一个问题：文字重叠
 
 
 
-- **text-bottom**：该元素的bottom(vitual-area的底边)，对齐父元素的text-bottom（底线）
+- **text-bottom**：该元素的bottom(content-area的底边)，对齐父元素的text-bottom（底线）
 
   ```html
   .span1{
@@ -1397,6 +1397,8 @@ content-area > virtual-area出导致出现一个问题：文字重叠
   }
   ```
 
+  ![360chrome_6RgcZGmD7R](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_6RgcZGmD7R.png)
+  
   ![image-20200429193130306](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200429193130306.png)
 
 

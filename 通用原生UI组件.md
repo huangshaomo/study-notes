@@ -1,5 +1,80 @@
 # 通用原生UI组件
 
+样式重置
+
+```html
+<style>
+/*公共样式-S*/
+*{margin:0;padding:0;}
+body{color: #333; min-width:1200px;overflow:hidden}
+ul,li{list-style: none;}
+.cur,a{cursor: pointer;}
+img{border:none;}
+table{margin:auto;}
+input,select,button,textarea{font-size:14px;}
+
+a,a:link {color:#333;text-decoration:none;}
+a:visited {}
+a:active,a:hover{text-decoration:none;cursor: pointer;}
+a:focus {outline:none;}
+
+.right{float:right;}
+.left{float:left;}
+
+.tRight{ text-align:right;}
+.tcenter{ text-align:center;}
+.tLeft{ text-align:left;}
+
+.b{ font-weight:bold;}
+.n{ font-weight:normal;}
+.nodata{position:absolute;left:0px;}
+.yh{font-family:\5FAE\8F6F\96C5\9ED1;}
+
+
+.none{ display:none;}
+.block{display: block;}
+
+.clearFix::after{content:"";display:block; clear:both;}
+.w-1200{width: 1200px; margin: 0 auto;}
+
+/*公共样式-E*/
+</style>
+```
+
+
+
+
+
+## Header(纯CSS)
+
+```html
+<div class="header">
+    <div class="header-top">
+    	<div class="logo slide-left-delay-1 left"><img src="{$logo}" alt=""></div>
+        <div class="search right"></div>
+        <div id="nav" class="nav right slide-right-delay-1">
+            <li><a href="{$indexurl}">首页</a></li>
+            {$ltcms_菜单}
+        </div>
+    </div>
+    <div class="banner">
+        <img src="{$banner}" alt="">
+        <div class="banner-title">
+        </div>
+    </div>
+</div>
+```
+
+
+
+
+
+
+
+
+
+
+
 ## 纯CSS
 
 ### 1. 图片遮罩层
@@ -22,21 +97,11 @@
 
 ![image-20200917214730847](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200917214730847.png)
 
-#### 可选颜色扩展
-
-```css
-/* 遮罩层颜色扩展 */
-/* 透明色 */
-.layer > .mask.white{background-color: rgba(255, 255, 255, 0.7); color: #333;}
-/* 青绿色 */
-.layer > .mask.lightgreen{background-color: rgba(64, 196, 128, 0.7);}
-/* 天蓝色 */
-.layer > .mask.skyblue{background-color: rgba(35, 139, 199, 0.7);}
-```
+#### 
 
 
 
-2. 带下划线标题
+
 
 #### 基本功能
 
@@ -404,7 +469,7 @@ a{color: #fff; text-decoration: none;}
 </div>
 ```
 
-![Jn1Q3KRyhJ](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_FrbH8zkp3v.png)
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Jn1Q3KRyhJ.gif" alt="chrome_FrbH8zkp3v" style="zoom:150%;" />
 
 #### 快速了解
 
@@ -448,7 +513,7 @@ width必须要给父级设置width，否则只会向右伸展
 </ul>
 ```
 
-<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Jn1Q3KRyhJ.gif" alt="chrome_FrbH8zkp3v" style="zoom:150%;" />
+![Jn1Q3KRyhJ](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_FrbH8zkp3v.png)
 
 
 
@@ -622,7 +687,41 @@ width必须要给父级设置width，否则只会向右伸展
 
 自适应图片：如果给图片设置了background-size:100% 100%，表示图片尺寸跟随图片盒的宽度而改变，且默认100% 填充图片盒，这样会造成图片尺寸改变，并发生变形，这种图片适合做自适应轮播图
 
-![8saIKPltSC](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/taHO1Z7Nxr.gif)
+
+
+
+
+
+
+### 10. 视频播放
+
+```html
+<style>
+.video-mask{display: none; position: fixed;width: 100%;height: 100%;background-color: rgba(0, 0, 0, 0.7);top: 0;left: 0;z-index: 9999;}
+.video-mask video{width: 800px;height:600px;position: absolute;left: 50%;margin-left: -400px;top:170px;background: #000;outline: none;}
+.video-mask .close{width: 60px;height: 60px;position: absolute;top: 20px;right: 20px;background: url(../images/video-close-btn.png);cursor: pointer;}</style>
+<div class="video-mask">
+    <video src="" autoplay controls></video>
+    <div class="close"></div>
+</div>
+```
+
+```js
+$('.link1 img').click(function () {
+    var src = $(this).find('a').attr('src');
+    $('.video-mask video').attr('src', src);
+    $('.video-mask').fadeIn();
+})
+$('.video-mask .close').click(function () {
+    $('.video-mask').fadeOut().find('video').attr('src', "");
+})
+```
+
+
+
+
+
+
 
 
 
@@ -674,7 +773,10 @@ Tabs.prototype.init = function(tabs_title,tabs_content){
 }
 Tabs.prototype.bindEvent = function(){
     var _this = this;
-    this.tabs_title.on(this.options.eventType, 'li',function(){
+    this.tabs_title.on(this.options.eventType, 'li',function(event){
+        if (event.target.nodeName !== this.nodeName) {
+            event.target = this
+        }
         var target = $(event.target);
         var curIndex = target.index();
         // 3. 指定第几个活跃
@@ -717,9 +819,12 @@ Tabs.prototype.init = function(tabs_title,tabs_content){
     this.tabs_content.find('li:eq(0)').addClass('active-content');
     this.curIndex = 0;
 }
-Tabs.prototype.bindEvent = function(){
+Tabs.prototype.bindEvent = function(event){
     var _this = this;
     this.tabs_title.on(this.options.eventType, 'li',function(){
+        if (event.target.nodeName !== this.nodeName) {
+            event.target = this
+        }
         var target = $(event.target);
         var curIndex = target.index();
         // 3. 指定第几个活跃
@@ -869,6 +974,8 @@ var tab1 = new Tabs({
         })
     </script>
 ```
+
+![taHO1Z7Nxr](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/frJb8bNJ4L.gif)
 
 ![frJb8bNJ4L](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/wwSBlKMG0i.gif)
 
@@ -1863,7 +1970,9 @@ $(".anchor-list li a").click(function () {
 </script>
 ```
 
-![taHO1Z7Nxr](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/frJb8bNJ4L.gif)
+![8saIKPltSC](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/taHO1Z7Nxr.gif)
+
+
 
 #### 添加文字提示
 
