@@ -114,6 +114,110 @@ a:focus {outline:none;}
 
 
 
+**结构2（上下展开导航栏）**
+
+```html
+<style>
+    *{margin: 0px; padding: 0px; line-height: 1; list-style: none;}
+    a{text-decoration: none; color: #333;}
+
+    /*默认二级下拉导航菜单*/
+    .menu{background:#333; display: inline-block;}
+    #nav{width: 270px; border: 1px solid #ccc; }
+    #nav li{position: relative; cursor: pointer; border-top: 1px solid rgba(0,0,0,.3); cursor: pointer;}
+    #nav li a{line-height: 20px; color: #ccc;position: relative; font-size: 14px; padding: 0px 10px; display: block; min-height: 44px; line-height: 44px;}
+    #nav li.hasChild::after{content: "<"; position: absolute; right: 10px; top: 15px; color: #ccc;  transition: all linear .2s;}
+
+    #nav li ul{display: none;}
+
+    /* 二级 */
+    #nav li ul li{background-color: #222;}
+    #nav li ul li a{padding: 0px 20px;}
+    /* 三级 */
+    #nav li ul li ul{border-top: 1px solid rgba(0,0,0,.8);}
+    #nav li ul li ul li{ background-color: #000;}
+    #nav li ul li ul li a{padding: 0px 30px;}
+
+    /*一级动效*/
+    #nav > li:hover{background-color: #474747; color: #fff;}
+    #nav > li.active{ background-color: #474747;}
+    #nav > li.active::after{transform: rotateZ(-90deg);}
+
+    /* 二级动效 */
+    #nav > li ul li.active > a{color: #fff;}
+    #nav > li ul li.active::after{transform: rotateZ(-90deg);}
+</style>
+<div class="menu">
+    <ul id="nav" class="nav clearFix">
+        <li><a href="">学校首页</a></li>
+        <li><a href="">申请书</a></li>
+        <li><a href="">成果总结</a>
+            <ul>
+                <li><a href="">成果总结1</a></li>
+                <li><a href="">成果总结1</a></li>
+                <li><a href="">成果总结1</a></li>
+            </ul>
+        </li>
+        <li><a href="">成果鉴定</a>
+            <ul>
+                <li><a href="">成果总结1</a></li>
+                <li><a href="">成果总结1</a></li>
+                <li>
+                    <a href="">成果总结1</a>
+                    <ul>
+                        <li><a href="">推广应用</a></li>
+                        <li><a href="">推广应用</a></li>
+                        <li><a href="">推广应用</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </li>
+        <li><a href="">推广应用</a></li>
+        <li><a href="">证明材料</a></li>
+        <li><a href="">廉政鉴定</a></li>
+        <li><a href="">联系我们</a></li>
+    </ul>
+</div>
+<script src="js/jquery1.7.2.min.js"></script>
+<script>
+    // 1. 首先给带有子元素的li添加箭头（hasChild）
+    var hasChild;
+    $('.menu li').each(function(index,item){
+        hasChild = $(this).find('ul').html()
+        if(hasChild!= null) $(this).addClass('hasChild');
+    })
+
+    // 2. 如果点击的元素带有类名haschild，则展开该元素的子ul,否则直接a链接跳转
+    $('.menu li').click(function(event){
+        // 阻止事件冒泡
+        if(event.stopPropagation){
+            event.stopPropagation()
+        }else{
+            event.cancelBubble = true;
+        }
+
+        if($(this).hasClass('hasChild')){
+            // 阻止默认事件触发
+            if(event.preventDefault){
+                event.preventDefault();
+            }else{
+                event.returnValue = false;
+            }
+            // 方式一：展开当前的li之前，先关闭其他展开的li
+
+            // 方式二：只展开当前点击的，不关注其他的是否展开
+            $(this).toggleClass('active').children('ul').slideToggle(200,'swing')
+        }
+    })
+    // active
+    // 背景变色，三级旋转，ul展开
+</script>
+```
+
+![PyN9MI5R2i](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/PyN9MI5R2i.gif)
+
+
+
 ### 搜索栏
 
 **结构1（展开搜索框）**
@@ -387,13 +491,21 @@ $('.input-btn, .input-text, .search-input').click(function(event){
 
 
 
-
-
-
-
 ### banner
 
+```html
+<style>
+    .banner{position: relative; height: 400px; width:100%; overflow: hidden;}
+    .banner img{ position: absolute; left: 50%;  margin-left: -960px; z-index: -1;}
+    .banner-title{height: 100%; background: url("../images/banner-title.png")no-repeat center center;}
+</style>
+<div class="banner">
+    <img src="{$banner}" alt="">
+    <div class="banner-title w-1200"></div>
+</div>
+```
 
+![chrome_vnANwjVaZ8](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_vnANwjVaZ8.png)
 
 
 
@@ -2428,6 +2540,8 @@ $(window).scroll(function(){
 
 ### 9. 滚动公告
 
+#### 1. 多行多列滚动公告
+
 ```js
 // 滚动公告制作思路:
 // 首先克隆第一个li到最后位置,然后ul使用margin-top滚动.
@@ -2477,7 +2591,7 @@ function scrollNotice() {
 scrollNotice();
 ```
 
-
+![cIdal2g15K](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/cIdal2g15K.gif)
 
 
 
