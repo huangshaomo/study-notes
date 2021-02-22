@@ -1279,6 +1279,8 @@ conntain展示：
 - linear-gradient(渐变方向，起始颜色（起止点），结束颜色（起止点）)
   - 渐变方向：默认to bottom ,可以设置角度和方向值（to-left,to-left-top...）
   - 起止点：如果左边存在起止点，两点范围内发生渐变过渡，如果左边不存在起止点，从左边到起止点不发生渐变过渡
+  
+  <img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_NFbRgnlP3S.png" alt="chrome_NFbRgnlP3S" style="zoom: 80%;" />
 
 ```html
 <style>
@@ -1293,22 +1295,115 @@ conntain展示：
 
 ![css3 (11)](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/20210128224253.png)
 
+上面表示渐变方向是从左到右，蓝色到紫色的渐变访问是从30px开始，到270px结束。
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/8MzzfIMx8z.gif" alt="8MzzfIMx8z" style="zoom:80%;" />
 
 
-- radial-gradient(圆类型 圆半径 at 圆心位置，起始颜色，（起止点），结束颜色，（起止点）)
 
+- **radial-gradient(圆类型 圆半径 at 圆心位置，起始颜色（渐变起始位置），结束颜色（渐变结束位置/渐变起始位置）)**
+
+  > 默认情况下，对于辐射渐变，在不指定圆类型以及位置的情况下，其圆的大小和位置是由容器的尺寸决定的。
+>
+  > 圆心位置默认在中间，是圆心还是椭圆，依据容器宽高比例决定，1:1就是圆，其他比例就是椭圆
+
+  ```html
+  <style>
+      .radial-gradient {
+          width: 400px;
+        height: 200px;
+          background: radial-gradient(circle closest-side at 50px 50px, #00f 20px, #f10 200px );
+    }
+  </style>
+  <div class="radial-gradient"></div>
+  ```
+  
+  上面表示绘制一个圆形状。半径长度为从圆心到离圆心最近的边，圆心位置在以左上为圆点的横坐标为50px，纵坐标为50px的位置，从蓝色渐变到紫色，开始渐变范围为从20px开始到200px结束渐变。
+  
+  ![qYYkfPwxHJ](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/qYYkfPwxHJ.gif)
+  
+  
+  
   - 圆类型：circle、ellipse
-
-  - 圆半径：
-
-    - losest-corner——距离最近父容器的角
-    - losest-side——距离最近父容器的边
-    - farthest-corner——距离最远父容器的角
-    - farthest-side——距离最远父容器的边
-
+  
+    椭圆（ellipse）
+  
+    ![chrome_oK4gWxlb6F](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_oK4gWxlb6F.png)
+  
+    圆（circle）
+  
+    圆的半径既不是按照宽度来的，也不是按照高度来的，是按照最远边角距离作为渐变结束线的：
+  
+    <img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_mOLSpMEFM3.png" alt="chrome_mOLSpMEFM3" style="zoom:67%;" />
+  
+  - 圆半径：（控制圆的大小）
+  
+    - closest-corner——指定径向渐变的半径长度为从圆心到离圆心最近的角
+  
+      ```css
+      background: radial-gradient(circle closest-corner at 50px 50px, yellow , #f10 );
+      ```
+  
+      ![Typora_dplBDAOi4j](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Typora_dplBDAOi4j.png)
+  
+      ![360chrome_eW4FuroFBN](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_eW4FuroFBN.png)
+  
+    - closest-side——指定径向渐变的半径长度为从圆心到离圆心最近的边
+  
+      ```css
+      background: radial-gradient(circle closest-side at 50px 50px, yellow , #f10 );
+      ```
+  
+      ![Typora_rmDx6ymgo4](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Typora_rmDx6ymgo4.png)
+  
+      ![360chrome_DvYlETRhvJ](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_DvYlETRhvJ.png)
+  
+    - farthest-corner——指定径向渐变的半径长度为从圆心到离圆心最远的角
+  
+      ```css
+      background: radial-gradient(circle farthest-corner at 50px 50px, yellow , #f10 );
+      ```
+  
+      ![](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Typora_nZ2vrJoK6W.png)
+  
+    - farthest-side——指定径向渐变的半径长度为从圆心到离圆心最远的边
+  
+      ```css
+      background: radial-gradient(circle farthest-side at 50px 50px, yellow , #f10 );
+      ```
+  
+      ![Typora_fCzjNiqwbL](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/Typora_fCzjNiqwbL.png)
+  
   - 圆心位置：填像素值，默认在容器中心
-
+  
     
+  
+  对于圆形界面，我们只需要指定一个半径就可以了，但是对于椭圆类型的径向渐变，我们需要同时指定横轴和纵轴的长度，例如：
+
+```css
+.radial-gradient {
+    width: 200px; height: 200px;
+    background: radial-gradient(50px 100px ellipse, transparent 40px, yellow 41px, red);
+}
+```
+
+效果如下图：
+
+![椭圆渐变渐变图](https://image.zhangxinxu.com/image/blog/201711/2017-11-22_223217.png)
+
+需要注意的是，在上面示意CSS代码中，透明到黄色分界那里有一个`1px`的偏差过渡，也就是`transparent 40px, yellow 41px`中`yellow`是`41px`，而不是设置的`40px`，原因在于在Chrome下，如果颜色直接`0`偏差过渡，会有比较严重的锯齿，类似下图这样（背景色设为`#333`）
+
+![Chrome浏览器下径向渐变的锯齿](https://image.zhangxinxu.com/image/blog/201711/2017-11-22_223643.png)
+
+通过有1像素或者半像素的过渡缓冲可以有效避免锯齿的出现。
+
+
+
+
+
+总结：
+
+1. 渐变可累加，就是可以写多个raidal-graident
 
 ## 4、text
 

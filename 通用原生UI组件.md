@@ -45,7 +45,7 @@ a:focus {outline:none;}
 
 
 
-## Header(纯CSS)
+## Header
 
 ```html
 <div class="header">
@@ -65,9 +65,380 @@ a:focus {outline:none;}
 </div>
 ```
 
+### 导航栏
+
+**结构1(向上浮现)**
+
+```html
+<style>
+    /*默认二级下拉导航菜单*/
+    #nav{width: 800px; border: 1px solid #ccc;}
+    #nav li{position: relative; float: left; cursor: pointer;}
+    #nav > li{height: 60px; line-height: 60px;}
+    #nav li a{padding: 0px 20px;}
+    #nav li ul{position: absolute; left: 0px; top: 80px;width: 120px; opacity: 0; visibility: hidden; background: #fff; transition: all ease-in-out .3s; padding: 15px 0px; z-index: 9999; border: 1px solid #ccc; box-sizing: border-box;}
+    /* 二级 */
+    #nav li ul li{line-height: 24px; padding: 10px 0px;}
+    /*一级动效*/
+    #nav li:hover > a{color: #28ae65;}
+    #nav li:hover > ul{ opacity: 1; top: 60px; visibility: visible;}
+    /*二级动效*/
+</style>
+<div class="menu">
+    <ul id="nav" class="nav clearFix">
+        <li><a href="">首页</a></li>
+        <li><a href="">申请书</a></li>
+        <li><a href="">成果总结</a>
+            <ul>
+                <li><a href="">成果总结1</a></li>
+                <li><a href="">成果总结1</a></li>
+                <li><a href="">成果总结1</a></li>
+            </ul>
+        </li>
+        <li><a href="">成果鉴定</a>
+            <ul>
+                <li><a href="">成果总结1</a></li>
+                <li><a href="">成果总结1</a></li>
+                <li><a href="">成果总结1</a></li>
+            </ul>
+        </li>
+        <li><a href="">推广应用</a></li>
+        <li><a href="">证明材料</a></li>
+        <li><a href="">廉政鉴定</a></li>
+        <li><a href="">联系我们</a></li>
+    </ul>
+</div>
+```
+
+![tP1yBD12l4](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/tP1yBD12l4.gif)
 
 
 
+### 搜索栏
+
+**结构1（展开搜索框）**
+
+```html
+<style>
+    .search{display: inline-block;height: 40px;line-height: 40px;border-radius: 20px;background: #2a3d50; cursor: pointer; box-sizing: border-box;}
+    .search .input-text{width: 0px; outline: none; border: none;background: #2a3d50; transition:.5s; color: #fff;}
+    .search .input-btn{width: 40px; height: 40px;text-align: center; border-radius: 50%; color: #fff; transition: 0.5s;}
+    .search:hover .input-text{width: 200px; margin: 0px 20px;}
+    .search:hover .input-btn{background: #fff; color: #2a3d50; transform: rotateZ(-360deg);}
+</style>
+<!--search left   input-btn left-->
+<div class="search">
+    <a href="javascript:void(false);" class="input-btn left"><i class="fa fa-search"></i></a>
+    <input type="text" class="input-text " placeholder="输入搜索内容"/>
+</div>
+```
+
+![pp8KiqzH2l](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/pp8KiqzH2l.gif)
+
+```html
+<!--search left   input-btn right-->
+```
+
+![phAPJ8lGHF](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/phAPJ8lGHF.gif)
+
+```html
+<!--search right   input-btn left-->
+```
+
+![sKASZ9gr1O](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/sKASZ9gr1O.gif)
+
+```html
+<!--search right   input-btn right-->
+```
+
+![EZzVDPNEVH](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/EZzVDPNEVH.gif)
+
+**结构2**
+
+**fixed搜素框**
+
+```html
+<style>
+    .search{display: inline-block;height: 40px;line-height: 40px;border-radius: 50%;}
+    .search .input-btn{display: inline-block; width: 40px; height: 40px;text-align: center; border-radius: 50%; color: #2a3d50; transition: 0.5s; cursor: pointer;}
+    .search .search-input{position: fixed;left: 0px; top: 0px; right: 0px; bottom: 0px; margin: auto; background: rgba(0, 0, 0, 0.7); opacity: 0; z-index: -10; transition: .5s; transform: scale(1.25,1.25);}
+    .search .search-input .input-text{position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%); width: 290px; height: 40px;z-index: 9999;border: 1px solid transparent; outline: none; padding: 0px 20px; box-sizing: border-box;}
+
+    .search .search-input.active{opacity: 1; z-index: 10; transform: scale(1,1);}
+    .search .input-text:focus{ box-shadow: 0px 0px 8px 0px rgba(255, 255, 255, 1);}
+</style>
+<div class="search">
+    <a href="javascript:void(false);" class="input-btn"><i class="fa fa-search"></i></a>
+    <div class="search-input">
+        <input type="text" class="input-text">
+    </div>
+</div>
+```
+
+```js
+$('.input-btn, .input-text, .search-input').click(function(event){
+    if (event.target.nodeName !== this.nodeName) event.target = this
+    if(!$(this).hasClass('.input-text')){    //如果点击的不是输入框，可以转换active
+        $('.search-input').toggleClass('active');
+        $('.input-text').focus()
+    }
+})
+```
+
+![TXxoxEorsd](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/TXxoxEorsd.gif)
+
+
+
+
+
+### 轮播图
+
+**双向无缝轮播**
+
+```html
+<style type="text/css">
+    *{margin: 0px; padding: 0px; list-style: none; text-decoration: none; color: #333;}
+    .slide-item  p{position: absolute;left: 0px; top: 0px; color: #fff; }
+    .arrow{position: absolute;width: 30px; height: 80px;top: 50%; margin-top: -40px; background: rgba(0,0,0,0.5); }
+    .prev{left: 30px;}
+    .next{right: 30px;}
+    .pagination{position: absolute;width: 100%;  text-align: center; bottom: 30px;}
+    .pagination ul{display: inline-block;}
+    .pagination li{ width: 10px; height: 10px; line-height: 10px; border-radius: 50%;background: #fff; float: left; margin-left: 10px;}
+    .pagination li.active-point{background: #f10;}
+</style>       
+<div class="slide" id="slide">
+    <ul class="slide-group">
+        <li class="slide-item red"><a href="">
+            <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3881048221,3833583369&fm=26&gp=0.jpg"
+            <p>这是第一张</p>
+            </a></li>
+        <li class="slide-item blue"><a href="">
+            <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=1486271666,307393547&fm=26&gp=0.jpg" alt="">
+            <p>这是第二张</p>
+            </a></li>
+        <li class="slide-item pink"><a href="">
+            <img src="https://ss3.bdstatic.com/70cFv8Sh_Q1YnxGkpoWK1HF6hhy/it/u=3731741439,4057676812&fm=26&gp=0.jpg" alt="">
+            <p>这是第三张</p>
+            </a></li>
+        <li class="slide-item orange"><a href="">
+            <img src="https://ss1.bdstatic.com/70cFvXSh_Q1YnxGkpoWK1HF6hhy/it/u=2350817201,1137116540&fm=26&gp=0.jpg" alt="">
+            <p>这是第四张</p>
+            </a></li>
+    </ul>
+    <div class="arrow prev" id="btn-prev"></div>
+    <div class="arrow next" id="btn-next"></div>
+    <div class="pagination" id="pagination"></div>
+</div>
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/1.7.2/jquery.min.js"></script>
+<script type="text/javascript">
+    function Slide(options) {
+        this.wrapper = $(options.elm);
+        this.slideGroup = this.wrapper.find('ul');
+        this.slideItems = this.wrapper.find('li');
+        this.pagination = $(options.pagination);
+        this.width = options.width;
+        this.height = options.height;
+        this.length = this.slideItems.length;
+        this.idx = 0;
+        this.lock = false;
+        this.timer = null;
+        this.duration = options.duration || 3000;
+        this.initLeft = 0;
+        this.init(options)//初始化轮播图
+    }
+    Slide.prototype.init = function(options) {
+        //初始化轮播图视口宽度，容器宽度，项目宽度。
+        var that = this;
+        if(options.loop) this.clone(options.loop);
+        if(options.pagination) this.creatElm(options.pagination);
+        this.wrapper.css({width:options.width || 600,height:options.height || 300,overflow:'hidden',position:'relative'});
+        this.slideGroup.css({width:this.slideGroup.find('li').length * this.width,height:this.height,position:'absolute',left:-this.initLeft});
+        this.slideGroup.find('li').css({width:this.width,height:this.height,float:'left',position:'relative'})
+        this.slideGroup.find('li img').css({width:'100%',height:'100%' ,backgroundSize:'cover'});
+        that.activeElm(that.idx);
+        this.bindEvent(options)
+        this.timer = setInterval(function(){
+            that.toNext();
+        },this.duration);
+    }
+    Slide.prototype.clone = function(mode){
+        if(mode !== '' && mode === true){ 
+            this.slideItems.eq(0).clone().appendTo(this.slideGroup)
+            this.slideItems.eq(this.length - 1).clone().prependTo(this.slideGroup);
+            this.initLeft = this.width;
+        }else{
+            this.slideItems.eq(0).clone().appendTo(this.slideGroup)
+        }
+    }
+    Slide.prototype.creatElm = function(target){
+        var ul = document.createElement('ul');
+        $(ul).appendTo($(target));
+        for(var i = 0; i < this.slideItems.length; i ++){
+            var li = document.createElement('li');
+            if(i === 0 ) $(li).addClass('active-point');
+            $(li).appendTo($(ul));
+        }
+
+    }
+
+    Slide.prototype.toPrev = function(){
+        if(this.lock) return false;
+        this.idx--;
+        this.move();
+    }
+
+    Slide.prototype.toNext = function(){ 
+        if(this.lock) return false;
+        this.idx++;
+        this.move();
+    }
+
+    Slide.prototype.move = function(){
+        var that = this;
+        this.lock = true
+        // console.log('锁了',this.lock);
+        // console.log('执行第'+ this.idx +'次');
+
+        this.slideGroup.animate({left:-(this.idx * this.width + this.initLeft),top:0},'swing',function(){
+            that.lock = false;
+            that.activeElm(that.idx);
+            // console.log('解开了',that.lock);
+            if(that.idx == that.slideItems.length){
+                that.idx = 0;
+                that.activeElm(that.idx);
+                that.slideGroup.css({left:-that.initLeft});
+            }
+            if(that.idx == -1){
+                that.idx = that.slideItems.length-1;
+                that.slideGroup.css({left:-that.initLeft*(that.slideItems.length)});
+            }
+        })
+    }
+    Slide.prototype.activeElm = function(curIdx){
+        this.pagination.find('li').removeClass('active-point').eq(curIdx).addClass('active-point');
+        this.slideItems.removeClass('active-item').eq(curIdx).addClass('active-item')
+    }
+    Slide.prototype.bindEvent = function(options){
+        var that = this;
+        if(options.arrow.prev){
+            $(options.arrow.prev).click(function(){
+                clearInterval(that.timer);
+                that.timer = null;
+                that.toPrev();
+                that.timer = setInterval(function(){
+                    that.toNext();
+                },that.duration)
+            })
+        }
+        if(options.arrow.next){
+            $(options.arrow.next).click(function(){
+                clearInterval(that.timer);
+                that.timer = null;
+                that.toNext();
+                that.timer = setInterval(function(){
+                    that.toNext();
+                },that.duration)
+            })
+        }
+        if(options.pagination){
+            $(options.pagination).on('click','li',function(e){
+                console.log(that.idx, $(e.target).index());
+                var tarIdx = $(e.target).index()
+                that.idx = tarIdx;
+                clearInterval(that.timer);
+                that.timer = null;
+                that.move();
+                that.timer = setInterval(function(){
+                    that.toNext();
+                },that.duration)
+            })
+        }
+        this.wrapper.on('mouseover',function(){
+            clearInterval(that.timer);
+            that.timer = null;
+        })
+        this.wrapper.on('mouseleave',function(){
+            that.timer = setInterval(function(){
+                that.toNext();
+            },that.duration)
+        })
+    }
+    let slide = new Slide({
+        elm:'#slide',
+        width:820,
+        height:300,
+        arrow:{
+            prev:'#btn-prev',
+            next:'#btn-next'
+        },
+        pagination:'#pagination',
+        loop:true,//启用无缝轮播,
+        actived:function(){},
+        befored:function(){}
+        // direction:'right'//轮播方向
+        // fullPage:true//是否启用全屏轮播
+
+    })
+</script>
+```
+
+![CVE7vhTPou](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/CVE7vhTPou.gif)
+
+
+
+
+
+
+
+### banner
+
+
+
+
+
+
+
+## Main
+
+### 栅格布局实现
+
+### Flex布局实现
+
+### Swiper轮播
+
+### Swiper多个轮播
+
+```html
+<style>
+#home .area7-content{width: 1200px; overflow: hidden; margin: 0 auto;}
+#home #swiper7{width: 1240px; height: 340px;}
+#home #swiper7 .swiper-wrapper{}
+#home #swiper7 .swiper-slide{float: left;width: 270px!important; height: 340px; box-sizing: border-box; margin-right: 40px; border: 2px solid #fff; transition: all ease-in-out .3s;}
+</style>
+<div class="area7-content">
+    <div class="swiper-container" id="swiper7">
+        <ul class="clearFix swiper-wrapper">
+            {$ltcms_区域7}
+        </ul>
+    </div>
+</div>
+<script>
+    // area7
+    var mySwiper7 = new Swiper('#swiper7', {
+        paginationClickable: true,
+        slidesPerView: 4,
+        speed: 800,
+        loop: true,
+        autoplay:3000,
+        autoplayDisableOnInteraction:false 
+    })
+</script>
+```
+
+![fTeZakmsYw](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/fTeZakmsYw.gif)
+
+单个slide的宽度是根据容器总宽度/slide个数得出的。单次滚动距离也是根据slide宽度来滚动的。如果需要给slide边距（margin），且不影响滚动距离。则需要强制slide的width + margin刚好等于swiper计算出的slide宽度。这样就不会影响滚动。
 
 
 
@@ -717,6 +1088,15 @@ $('.video-mask .close').click(function () {
 })
 ```
 
+### 11. 强制webkit渲染
+
+```html
+<meta name="renderer" content="webkit" />
+<meta name="force-rendering" content="webkit" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<script>/*@cc_on window.location.href="http://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); @*/</script>
+```
+
 
 
 
@@ -755,6 +1135,28 @@ function Tabs(options){
         wrapper:'.tabs',
         eventType:'click',
     }
+    //ie不支持assign,需要自己实现
+    if (typeof Object.assign != 'function') {
+        Object.assign = function (target) {
+            'use strict';
+            if (target == null) {
+                throw new TypeError('Cannot convert undefined or null to object');
+            }
+
+            target = Object(target);
+            for (var index = 1; index < arguments.length; index++) {
+                var source = arguments[index];
+                if (source != null) {
+                    for (var key in source) {
+                        if (Object.prototype.hasOwnProperty.call(source, key)) {
+                            target[key] = source[key];
+                        }
+                    }
+                }
+            }
+            return target;
+        };
+    }
     this.options = Object.assign({},baseObj,options);
     this.wrapper = options.wrapper && $(options.wrapper);
     this.tabs_title = this.wrapper.find('.tabs-title');
@@ -786,8 +1188,8 @@ Tabs.prototype.bindEvent = function(){
 Tabs.prototype.tabTo = function(curIndex){
     //临界值判断,不能大于总数-1,不能小于0
     curIndex = curIndex < 0 ? 0: curIndex >=0 && curIndex > this.count -1 ? this.count -1 : curIndex;
-    this.tabs_title.find('li').removeClass('active-title').eq(curIndex).addClass('active-title');
-    this.tabs_content.find('li').removeClass('active-content').eq(curIndex).addClass('active-content');
+    this.tabs_title.children('li').removeClass('active-title').eq(curIndex).addClass('active-title');
+    this.tabs_content.children('li').removeClass('active-content').eq(curIndex).addClass('active-content');
     return curIndex;
 }
 var tab1 = new Tabs({
@@ -802,6 +1204,28 @@ function Tabs(options){
     var baseObj = {
         wrapper:'.tabs',
         eventType:'click',
+    }
+        //ie不支持assign,需要自己实现
+    if (typeof Object.assign != 'function') {
+        Object.assign = function (target) {
+            'use strict';
+            if (target == null) {
+                throw new TypeError('Cannot convert undefined or null to object');
+            }
+
+            target = Object(target);
+            for (var index = 1; index < arguments.length; index++) {
+                var source = arguments[index];
+                if (source != null) {
+                    for (var key in source) {
+                        if (Object.prototype.hasOwnProperty.call(source, key)) {
+                            target[key] = source[key];
+                        }
+                    }
+                }
+            }
+            return target;
+        };
     }
     this.options = Object.assign({},baseObj,options);
     this.wrapper = options.wrapper && $(options.wrapper);
@@ -819,9 +1243,9 @@ Tabs.prototype.init = function(tabs_title,tabs_content){
     this.tabs_content.find('li:eq(0)').addClass('active-content');
     this.curIndex = 0;
 }
-Tabs.prototype.bindEvent = function(event){
+Tabs.prototype.bindEvent = function(){
     var _this = this;
-    this.tabs_title.on(this.options.eventType, 'li',function(){
+    this.tabs_title.on(this.options.eventType, 'li',function(event){
         if (event.target.nodeName !== this.nodeName) {
             event.target = this
         }
@@ -835,8 +1259,8 @@ Tabs.prototype.tabTo = function(curIndex){
     //临界值判断,不能大于总数-1,不能小于0
     curIndex = curIndex < 0 ? 0: curIndex >=0 && curIndex > this.count -1 ? this.count -1 : curIndex;
     this.options.tabBefore && this.options.tabBefore()
-    this.tabs_title.find('li').removeClass('active-title').eq(curIndex).addClass('active-title');
-    this.tabs_content.find('li').removeClass('active-content').eq(curIndex).addClass('active-content');
+    this.tabs_title.children('li').removeClass('active-title').eq(curIndex).addClass('active-title');
+    this.tabs_content.children('li').removeClass('active-content').eq(curIndex).addClass('active-content');
     this.options.tabEnd && this.options.tabEnd()
     return curIndex;
 }
@@ -2002,6 +2426,57 @@ $(window).scroll(function(){
 
 
 
+### 9. 滚动公告
+
+```js
+// 滚动公告制作思路:
+// 首先克隆第一个li到最后位置,然后ul使用margin-top滚动.
+// 临界条件:当Ul移动到了最后克隆的li的位置时,marginTop归零
+function scrollNotice() {
+    var notice = $('#notice');
+    var ul = notice.find('ul');
+    var ulH = notice.find('ul').height();
+    var li = notice.find('li');
+    var duration = 5000;    //滚动间隔
+    var step = 60;      //每次滚动的距离
+    var srollDis = 0;   //总滚动距离
+    var timer = null;
+    if(li.length <= 1) return
+    init()//初始化结构样式
+    console.log(ulH);
+    function toMove() {
+        srollDis += step;
+        notice.find('ul').animate({ marginTop: -srollDis }, 'swing', function () {
+            if (srollDis === ulH) {
+                srollDis = 0;
+                ul.css('marginTop', 0)
+            }
+        })
+    }
+    function init() {
+        // li.css({lineHeight:noticeH+'px'});
+        // 克隆第一条
+        for(var i = 0; i < li.length; i++){
+            if(i < 4){
+                li.eq(i).clone().appendTo(ul);
+            }
+        }
+        timer = setInterval(toMove, duration)//启动计时器
+        bindEvent();//绑定事件
+    }
+    function bindEvent() {
+        ul.on('mouseover', 'li', function () {
+            clearInterval(timer);
+            timer = null
+        })
+        ul.on('mouseout', 'li', function () {
+            timer = setInterval(toMove, duration)//启动计时器
+        })
+    }
+}
+scrollNotice();
+```
+
 
 
 
@@ -2032,5 +2507,96 @@ $(window).scroll(function(){
         return serializeObj;
     };
 })(jQuery);
+```
+
+### 2. 计算单行最佳marginRight
+
+```js
+//首先判断总的item长度是否超过wrapper容器宽度，分三种情况
+//如果没超过，直接计算剩余宽度,再进行MR分配
+//如果超过，先计算出单行最佳个数，再计算剩余宽度,再进行MR分配
+//如果相等，需要进行宽松调节（拿一个item宽度 + 剩余宽度重新计算最佳MR）,再进行MR分配
+
+function resizeMarginRight(wrapper) {
+    var limitMR = 10;//允许的最低限度的margin-right
+    var wrapper = $(wrapper)
+    var wrapperW = Math.floor(wrapper.width()); //容器总宽度
+    var itemW = wrapper.children().outerWidth(); //item宽度
+    var itemNum = wrapper.children().length;//item个数
+    var MR; //最佳Margin-right
+    var perfectNum;//单行最佳个数
+    //首先，先判断总的item长度是否超过wrapper容器宽度
+    if (itemW * itemNum < wrapperW) {
+        console.log('1');
+        perfectNum = itemNum
+        // 如果没超过，直接计算剩余宽度
+        MR = getSuplusW(perfectNum, itemW, wrapperW)
+        divideMargin(MR)
+    } else if (itemW * itemNum > wrapperW) {
+        console.log('2');
+        //如果超过，先计算出单行最佳个数，再计算剩余宽度,再进行MR分配
+        perfectNum = getPerfectNum(itemNum, itemW, wrapperW)
+        MR = getSuplusW(perfectNum, itemW, wrapperW)
+        divideMargin(MR)
+    } else {
+        console.log('3');
+        //如果相等，需要进行宽松调节（那一个item作为剩余宽度分配）
+        perfectNum = itemNum - 1
+        MR = getSuplusW(perfectNum, itemW, wrapperW)
+        divideMargin(MR)
+    }
+    /**
+         * 计算单行最佳个数
+         * @params itemNum item个数
+         * @params itemW item长度
+         * @params wrapperW 容器宽度
+         * 根据wrapper总宽度与依次递增的li的总长度得出一行最佳的li个数，（判断条件是递增的li总宽度 < wrapper 且 剩余宽度 < li宽度）
+         * */
+    function getPerfectNum(itemNum, itemW, wrapperW) {
+        for (var i = 1; i <= itemNum; i++) {
+            if (itemW * i < wrapperW && wrapperW - (itemW * i) < itemW) {
+                return i;
+            }
+        }
+    }
+
+    /**
+        * 计算剩余宽度
+        * @params bestNum 最佳个数
+        * @params itemW item宽度
+        * @params wrapperW 容器宽度
+        * 1. 首先计算出总的剩余宽度
+        * 2. 然后按item - 1的个数进行分配，（处在单行最后一个位置的不参与分配，所以减1）
+        * 3. 如果分配的MR  < limitMR,则重新分配
+        * 4. 返回最终分配好的MR
+        **/
+    function getSuplusW(bestNum, itemW, wrapperW) {
+        console.log(bestNum, itemW, wrapperW)
+        var suplusW = wrapperW % (bestNum * itemW);
+        var singleMR = Math.floor(suplusW / (bestNum - 1));
+        if (singleMR < limitMR) {
+            perfectNum -= 1;
+            return getSuplusW(bestNum - 1, itemW, wrapperW)
+        } else {
+            return singleMR
+        }
+    }
+
+    /**
+         * 为每个item - 1分配MR，（处在单行最后一个位置的不参与分配，所以减1）
+         * 依次遍历li,给li赋值margin-right，最后一个marginRight不给,并且置空
+         **/
+    function divideMargin(MR) {
+        console.log(perfectNum - 1);
+        wrapper.children().each(function (idx, elm) {
+            if ((idx + 1) % perfectNum === 0) {
+                $(elm).css({ marginRight: 0, marginLeft: 0 })
+            } else {
+                $(elm).css({ marginRight: MR, marginLeft: 0 })
+            }
+        })
+    }
+}
+resizeMarginRight('.ny-right-content ul');
 ```
 
