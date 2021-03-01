@@ -2632,7 +2632,7 @@ scrollNotice();
 //如果相等，需要进行宽松调节（拿一个item宽度 + 剩余宽度重新计算最佳MR）,再进行MR分配
 
 function resizeMarginRight(wrapper) {
-    var limitMR = 10;//允许的最低限度的margin-right
+    var limitMR = 3;//允许的最低限度的margin-right
     var wrapper = $(wrapper)
     var wrapperW = Math.floor(wrapper.width()); //容器总宽度
     var itemW = wrapper.children().outerWidth(); //item宽度
@@ -2711,6 +2711,8 @@ function resizeMarginRight(wrapper) {
         })
     }
 }
-resizeMarginRight('.ny-right-content ul');
+$(function(){
+    resizeMarginRight('.ny-right-content ul');
+})
 ```
 

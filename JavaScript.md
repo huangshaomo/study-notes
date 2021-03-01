@@ -133,11 +133,13 @@ var div = document.getElementsByTagName('div')[0]
 </script>
 ```
 
+![image-20200412110501679](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200412110304170.png)
+
 ![image-20200412110318687](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200412110318687.png)
 
 
 
-![image-20200412110304170](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200412110501679.png)
+
 
 
 
@@ -160,7 +162,11 @@ dom.offsetWidth/offsetHeight
 </script>
 ```
 
-![image-20200412110501679](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200412110304170.png)
+![image-20200412110304170](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200412110501679.png)
+
+
+
+
 
 ![image-20200412110532194](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200412110532194.png)
 
