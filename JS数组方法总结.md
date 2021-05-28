@@ -8,7 +8,7 @@
 
 #### push(val)
 
-将val添加到数组的最好，返回被修改的数组长度
+将val添加到数组的最后，返回被修改的数组长度
 
 ```javascript
 let arr = [1,2,3,4]
@@ -713,4 +713,8 @@ Array.prototype.myReduceRight = function(func,initialValue){
 
 
 ## ES6
+
+
+
+# 打通深拷贝的任督二脉
 

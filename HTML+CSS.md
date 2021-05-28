@@ -1570,3 +1570,113 @@ IE有个特点是能识别注释里边的一些特点文字，比如 【if IE】
 ##### caniuse
 
 查找CSS兼容性 
+
+
+
+#### font-family
+
+推荐阅读：https://juejin.cn/post/6899271427980001294#heading-26
+
+> 字体的排序规则应该遵循，优先使用system-ui，然后先ios再window，先西文再中文，最后以serif或sans-serif字符族打保底，字符族之后的字符不再生效。
+>
+> 就是遵循先稀有再到普遍。
+>
+> **注意:** 如果字体名称包含空格，它必须加上引号。在HTML中使用"style"属性时，必须使用单引号。
+
+```css
+//新浪微博
+Arial,"PingFang SC","Hiragino Sans GB","Microsoft YaHei","WenQuanYi Micro Hei",sans-serif	
+
+//segmentfault
+-apple-system,"Helvetica Neue",Helvetica,Arial,"PingFang SC","Hiragino Sans GB","WenQuanYi Micro Hei","Microsoft Yahei",sans-serif
+
+```
+
+
+
+字体由字体和字体族组成，字体族是字体的分类
+
+##### 字体族的分类
+
+- serif（衬线）：笔画结尾有特殊的装饰线或衬线
+
+- sans-serif（无衬线）
+
+- monospace（等宽字体）
+
+- fantasty（梦幻）
+
+- cuisive（草体）
+
+  
+
+##### 常用字体：
+
+**Helvetica**
+
+苹果系统支持的一种西文无衬线字体，是苹果生态中最常用的一套西文字体。`Helvetica Neue`是`Helvetica`字体改善版本，增加了更多不同粗细与宽度的字形。
+
+**Arial**
+
+是为了与Helvetica竞争而设计的无衬线西文字体，表现形式和Helvetica类似，在不同系统的浏览器都支持，兼容性非常好。
+
+**Tahoma**
+
+一种无衬线字体，间距较小，在不同系统的浏览器都支持，兼容性良好，可以解决Helvetica和Arial所为人诟病的缺点，比如大写的 I 和小写的 L 难以分辨。
+
+**San Francisco**
+
+苹果于2017年推出一种无衬线字体，也是目前苹果系统的默认西文字体，相比于`Helvetica`字体，`San Francisco`的字体风格更加简洁，减少了一些修饰的细节，支持符号的整体居中，比如时间显示，之前的 `Helvetica` 的冒号是不居中的。
+
+最低兼容版本：ios9、macOS10.11
+
+**PingFang SC(苹方-简)**
+
+苹果专为中国用户打造的一个中文无衬线字体，在2017年和`San Francisco`一起推出，SC代表简体，同时还有台湾繁体和香港繁体，整体造型简洁美观，是苹果系统默认的中文字体。
+
+最低兼容版本：ios9、macOS10.11
+
+**Hiragino Sans GB(冬青黑体)、Heiti SC(黑体)**
+
+苹果系统中较早的中文无衬线字体，为了兼容旧版macOS系统，我们一般用它们作为苹方字体的fallback。
+
+**Segoe UI**
+
+windows系统下的一种无衬线西文字体，也是windows系统的默认西文字体。
+
+**Microsoft YaHei(微软雅黑)**
+
+Windows系统默认的中文字体，也是一套无衬线字体。macOS上的浏览器大都预装微软雅黑，但不包括safari浏览器。
+
+ios和android系统不支持微软雅黑，所以设置移动端字体时可以忽略微软雅黑。
+
+**宋体**
+
+一种中文衬线字体，windows 和 macOS都有支持，字体偏瘦，风格明显。
+
+宋体也是windows XP及更早系统的默认中文字体。
+
+**WenQuanYi Micro Hei(文泉驿微米黑)**
+
+Linux系统下默认中文字体，一般为了兼容Linux系统才会设置这个字体。
+
+**Roboto**
+
+Android系统的默认西文字体，也是一种无衬线字体
+
+**Noto Sans (思源黑体)**
+
+Android系统的默认中文无衬线字体，由google推出的一款开源字体。
+
+**Apple Color Emoji**
+
+苹果产品的文字表情，在Mac和iOS系统中到处都可以看到，也是我们接触的最多的Emoji表情。
+
+**Segoe UI Emoji**
+
+Windows10系统中的Emoji表情，黑描边风格，没有苹果的圆润和质感。
+
+**Noto Color Emoji**
+
+Google推出的表情，和苹果的较为类似，更加扁平。
+

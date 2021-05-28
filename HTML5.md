@@ -61,33 +61,80 @@
 
 - ondragstart——拖拽开始（在按下后开始移动的一刹那，按下物体的一瞬间不会触发）
 
-- ondrag——拖拽进行中
+- ondrag——拖拽进行中（ondragstart一旦触发后，只要不抬起，即使不移动也触发）
 
 - ondrageend——拖拽结束（拖拽停止后触发）
 
   **上面的都有一个e事件参数**
 
-  
+这三个方法，其实跟mouse事件挺像的
 
-**用JS实现拖拽离开原位置**
 
-```javascript
-var oDragDiv = document.getElementsByClassName('a')[0];
-var startX = 0,
-    startY = 0
-oDragDiv.ondragstart = function (e) {
-    startX = e.clientX;
-    startY = e.clientY;
 
-}
+**拖拽实现**
 
-oDragDiv.ondragend = function (e) {
-    var disX = e.clientX - startX;
-    var disY = e.clientY - startY;
-    oDragDiv.style.left = oDragDiv.offsetLeft + disX + "px";
-    oDragDiv.style.top = oDragDiv.offsetTop + disY + "px";
-}
+**拖拽中移动**
+
+```html
+<style>
+    #box{width: 100px; height: 100px; background: deeppink; position: absolute; left: 100px; top: 100px;}
+</style>
+<div id="box" draggable="true"></div>
+<script>
+    var box = document.getElementById('box');
+    var startX,startY;
+    var hasDrag = false;
+    box.ondragstart = function(e){
+        startX =  e.offsetX;
+        startY =  e.offsetY;
+        hasDrag = true
+    }
+    box.ondrag = function(e){
+        if(hasDrag){
+            var endX = e.pageX - startX;
+            var endY = e.pageY - startY;
+            box.style.left = endX + 'px';
+            box.style.top = endY + 'px';
+        }
+    }
+    box.ondragend = function(){
+        hasDrag = false;
+    }
+</script>
 ```
+
+<img src="../../Documents/ShareX/Screenshots/2021-03/MEaOebG0xd.gif" alt="MEaOebG0xd" style="zoom:50%;" />
+
+相比mouse事件，drag事件的拖动似乎带有残影，而且感觉更丝滑。
+
+
+
+**拖拽抬起后再移动**
+
+```html
+<style>
+    #box{width: 100px; height: 100px; background: deeppink; position: absolute; left: 100px; top: 100px;}
+</style>
+<div id="box" draggable="true"></div>
+<script>
+    var box = document.getElementById('box');
+    var startX,startY;
+    box.ondragstart = function(e){
+        startX =  e.offsetX;
+        startY =  e.offsetY;
+    }
+    box.ondragend = function(e){
+        var endX = e.pageX - startX;
+        var endY = e.pageY - startY;
+        box.style.left = endX + 'px';
+        box.style.top = endY + 'px';
+    }
+</script>
+```
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/OZ17rFy72w.gif" alt="OZ17rFy72w" style="zoom:50%;" />
+
+
 
 **拖拽的组成（2）**
 
@@ -96,12 +143,10 @@ oDragDiv.ondragend = function (e) {
 
 针对目标区域的事件也有4个
 
-- ondragEnter—— 可拖动的元素或选取的文本在鼠标进入目标区域后触发
-- ondragover—— 可拖动的元素或选取的文本在进入目标区域后触发
-- ondragleave—— 可拖动的元素或选取的文本移出放置目标时执触发。 
-- ondrop——在ondragover事件中调用e.preventDefault()方法才会且鼠标松手后才触发是因为所有的标签元素，当拖拽周期结束后，默认事件是回到原处，因此需要阻止该默认事件，阻止该事件后才会执行ondrop事件（因为一个行为可以不止触发一个事件）
-
-因为所有的标签元素，当拖拽周期结束后，默认事件是回到原处，不过不直接
+- ondragEnter—— 被拖动元素进入到释放区所占据得屏幕空间时触发
+- ondragover—— 当被拖动元素在释放区内移动时触发
+- ondragleave—— 当被拖动元素没有放下就离开释放区时触发。 
+- ondrop——当被拖动元素在释放区里放下时触发，还有一个附加条件，需要在ondragover事件中调用e.preventDefault()方法才会在鼠标松手后才触发该事件，是因为所有的标签元素，当拖拽周期结束后，默认事件是回到原处，因此需要阻止该默认事件，阻止该事件后才会执行ondrop事件（因为一个行为可以不止触发一个事件）
 
 
 
@@ -187,6 +232,16 @@ list-style: none;
 
 注意在ondragstart 和ondrop 的值要一致，对应，除了Link,还有move、copy、copyMove、linkMove、all 等等
 
+
+
+
+
+h5实现拖拽
+
+
+
+
+
 #### 5.Hidden
 
 #### 6.Context-menu
@@ -216,7 +271,7 @@ list-style: none;
 
 > canvas是用JS操作来实现在画板上画画的
 
-getContext（"2d"）方法：用于获取画板的内容区，顾名思义，想要 画画首先得得到画画区
+getContext（"2d"）方法：用于获取画板的内容区，顾名思义，想要画画首先要拿到画板。
 
 
 
@@ -636,6 +691,146 @@ restore：恢复当前的坐标平移及旋转状态
 </script>
 ```
 
+API总结：
+
+```js
+rect( x, y, width, height )   绘制矩形
+
+fillRect( x, y, width, height )  绘制被填充的矩形
+
+strokeRect( x, y, width, height )  绘制矩形（无填充）
+
+clearRect( x, y, width, height ) 清除指定的矩形内的像素
+
+
+
+fill()  填充当前绘图（路径）
+
+stroke() 绘制已定义的路径
+
+beginPath()  起始（重置）当前路径
+
+moveTo( x, y )  将笔触移动到指定的坐标(x,y)
+
+lineTo( x, y )  绘制一条从当前位置到指定的坐标(x,y)的直线
+
+clip()  从原始画布剪切任意形状和尺寸的区域
+
+quadraticCurveTo()  创建二次贝塞尔曲线
+
+bezierCurveTo()   创建三次贝塞尔曲线
+
+arc( x, y, radius, startAngle, endAngle, anticlockwise)  绘制圆或圆弧
+
+arcTo( x1, y1, x2, y2, radius)  根据给定点画圆弧，再以直线连接两个点
+
+isPointInPath( x, y )  检测指定的点是否在当前路径中，在则返回true。
+
+
+
+fillStyle  设置或返回用于填充绘画的颜色、渐变或模式
+
+strokeStyle  设置或返回用于笔触的颜色、渐变或模式
+
+shadowColor  设置或返回用于阴影的颜色
+
+shadowBlur   设置或返回用于阴影的模糊级别
+
+shadowOffsetX  设置或返回阴影与形状的水平距离
+
+shadowOffsetY  设置或返回阴影与形状的垂直距离
+
+
+
+lineCap  设置或返回线条的结束点样式（butt、round、square）
+
+lineJoin  设置或返回当两条线交汇时，边角的类型（bevel、round、miter）
+
+lineWidth  设置或返回当前的线条宽度
+
+miterLimit  设置或返回最大斜接长度
+
+
+
+createLinearGradient( x0, y0, x1, y1 )  创建线性渐变
+
+createPattern( image/canvas/video, repeat )  在指定的方向内重复绘制指定的元素
+
+createRadialGradient( x0, y0, r0, x1, y1, r1 ) 创建径向渐变
+
+addColorStop( stop, color )  规定渐变对象中的颜色和停止位置
+
+
+
+font  设置或返回文本内容的当前字体属性（和css的font一样）
+
+textAlign  设置或返回文本内容的当前对齐方式
+
+textBaseline  设置或返回在绘制文本时使用的当前文本基线
+
+fillText( text, x, y )  在画布上绘制“被填充”的文本
+
+strokeText( text, x, y )  在画布上绘制文本（无填充）
+
+measureText( text )  返回包含指定文本宽度的对象（属性width获取宽度）
+
+
+
+drawImage( image/canvas, x, y )、drawImage( image/canvas, x, y, width, height )、drawImage( image/canvas, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight )  在画布上绘制图像、画布或视频
+
+
+
+createImageData( width, height )、createImageData(imageData)  绘制ImageData对象
+
+getImageData( x, y, width, height )  返回ImageData对象，该对象为画布上指定的矩形复制像素数据。
+
+putImageData( ImageData, x, y )、putImageData( imageData, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight )  把图像数据放回画布上。
+
+width  返回ImageData对象的宽度
+
+height  返回ImageData对象的高度
+
+data  返回一个对象，包含指定的ImageData对象的图像数据
+
+
+
+globalAlpha  设置或返回绘图的当前alpha或透明度
+
+globalCompositeOperation  设置或返回新图像如何绘制到已有的图像上。
+
+
+
+scale( x, y )  缩放当前绘图
+
+translate( x, y )  重新设置画布上的(0,0)位置
+
+rotate( angle )  选择当前绘图，单位为“弧度”，角度转弧度公式（ degrees*Math.PI/180）
+
+transform( m11, m12, m21, m22, dx, dy )  替换绘图的当前转换矩阵
+
+setTransform()  将当前转换重置为单元矩阵，然后运行transform()
+
+
+
+save()  保存当前环境的状态
+
+restore()  恢复之前保存过的路径状态和属性
+
+
+
+getContext('2d')  获取2d对象
+
+toDataURL()  将canvas转换成图片，返回地址
+```
+
+
+
+
+
+
+
+
+
 
 
 #### SVG和Canvas的区别
@@ -992,7 +1187,15 @@ stroke-width=3px;	//笔的粗细
 
 #### Video(视频播放)
 
+https://segmentfault.com/a/1190000038485447
 
+**controlslist**属性
+
+- **nodownload:** 不要下载
+
+- **nofullscreen:** 不要全屏
+
+-  **noremoteplayback:** 不要远程回放
 
 
 

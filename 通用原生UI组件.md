@@ -71,7 +71,7 @@ a:focus {outline:none;}
 
 ```html
 <style>
-    /*默认二级下拉导航菜单*/
+    /*默认三级下拉导航菜单*/
     #nav{width: 800px; border: 1px solid #ccc;}
     #nav li{position: relative; float: left; cursor: pointer;}
     #nav > li{height: 60px; line-height: 60px;}
@@ -148,7 +148,7 @@ a:focus {outline:none;}
     #nav > li ul li.active::after{transform: rotateZ(-90deg);}
 </style>
 <div class="menu">
-    <ul id="nav" class="nav clearFix">
+    <ul id="droplist" class="clearFix">
         <li><a href="">学校首页</a></li>
         <li><a href="">申请书</a></li>
         <li><a href="">成果总结</a>
@@ -224,7 +224,7 @@ a:focus {outline:none;}
 
 ```html
 <style>
-    .search{display: inline-block;height: 40px;line-height: 40px;border-radius: 20px;background: #2a3d50; cursor: pointer; box-sizing: border-box;}
+    .search{display: inline-block;height: 40px;line-height: 40px;border-radius: 20px;background: #2a3d50; cursor: pointer; box-sizing: border-box;overflow: hidden;}
     .search .input-text{width: 0px; outline: none; border: none;background: #2a3d50; transition:.5s; color: #fff;}
     .search .input-btn{width: 40px; height: 40px;text-align: center; border-radius: 50%; color: #fff; transition: 0.5s;}
     .search:hover .input-text{width: 200px; margin: 0px 20px;}
@@ -292,6 +292,15 @@ $('.input-btn, .input-text, .search-input').click(function(event){
 ![TXxoxEorsd](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/TXxoxEorsd.gif)
 
 
+
+```html
+<div class="search">
+    <a href="javascript:void(false);" class="input-btn left" type="submit"
+       onclick="SiteSearch('<%linkurl("search")%>', '#keywords');"><i class="fa fa-search"></i></a>
+    <input id="keywords" name="keywords" type="text" class="input-text" placeholder="请输入关键字搜索"
+           onkeydown="if(event.keyCode==13){SiteSearch('<%linkurl("search")%>', '#keywords');return false};" />
+</div>
+```
 
 
 
@@ -509,6 +518,262 @@ $('.input-btn, .input-text, .search-input').click(function(event){
 
 
 
+### 整体结构1
+
+**上banner下导航**
+
+![chrome_H1DKh9PuM5](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_H1DKh9PuM5.png)
+
+```html
+<div class="header transform-area">
+    <div class="banner">
+        <img src="{$banner}" alt="">
+        <div class="w-1200 banner-content">
+            <a href="{$indexurl}" class="logo slide-left-delay-1 left"><img src="{$logo}" alt=""></a>
+            <div class="banner-title w-1200">
+                <div class="bt1"></div>
+                <div class="bt2"></div>
+            </div>
+        </div>
+    </div>
+    <div class="menu">
+        <ul id="nav" class="nav slide-right-delay-1 w-1200 clearFix">
+            <li><a href="{$indexurl}">首页</a></li>
+            {$ltcms_菜单}
+        </ul>
+        <div class="scrollbar"></div>
+    </div>
+</div>
+```
+
+```css
+.header{min-width: 1200px;}
+.banner-content{height: 200px;  position: relative;}
+.logo{margin-top: 6px;}
+/*搜索*/
+.search{position: absolute; right: 0px; top: 50%; margin-top: -20px; display: inline-block;height: 40px;line-height: 40px;background: #EEEEEE; cursor: pointer; -moz-box-sizing: border-box; box-sizing: border-box; padding: 0px 10px; overflow: hidden;}
+.search .input-text{width: 180px; line-height: 40px; height: 40px; outline: none; border: none;background: #EEEEEE; -webkit-transition:.5s; -o-transition:.5s; -moz-transition:.5s; transition:.5s; color: #333;}
+.search .input-btn{width: 40px; height: 40px;text-align: center; border-radius: 50%; color: #333; -webkit-transition:0.5s; -o-transition:0.5s; -moz-transition:0.5s; transition: 0.5s;}
+.search .input-btn i{display: inline-block; background: url("../images/search.png"); background-repeat: no-repeat; background-position: center center; width: 40px; height: 40px;}
+.search:hover .input-text{width: 180px; margin: 0px 10px;}
+.search:hover .input-btn{color: #333; -webkit-transform: rotateZ(-360deg); -moz-transform: rotateZ(-360deg); -ms-transform: rotate(-360deg); -o-transform: rotateZ(-360deg); transform: rotateZ(-360deg); }
+
+/*banner区域*/
+.banner{position: relative; height: 200px; width: 100%; overflow: hidden;}
+.banner > img{ position: absolute; left: 50%;  margin-left: -960px; height: 200px; z-index: -1;}
+.banner-title{height: 100%; text-align: center; position: relative;}
+.banner-title .bt1{background: url("../images/banner-title.png")no-repeat center center; height: 60px; position: relative; top: 48px;}
+.banner-title .bt2{background: url("../images/banner-subtitle.png")no-repeat center center; height: 18px;position: relative; top: 62px;}
+
+/*导航栏*/
+.menu{height: 50px;position: relative; border-bottom: 1px solid #eee;}
+#nav{width: 1200px;}
+#nav li{position: relative;  cursor: pointer;}
+#nav > li{height: 50px; line-height: 50px; float: left; -moz-box-sizing: border-box; box-sizing: border-box; color: #999;}
+#nav > li > a{display: inline-block; height: 100%; color: #333;}
+#nav li ul{position: absolute; display: block; opacity: 0;  visibility: hidden;  left: 0px; top: 50px; width: 140px;  opacity: 1; background: #fff;padding: 13px 0px; z-index: 9999; -moz-box-sizing: border-box; box-sizing: border-box;background: #951207; }
+/* 滚动条 */
+.menu .scrollbar{width: 77px; height: 2px; background: #951207; position: absolute; left: 0px; top: 48px; opacity: 0; transition: all ease-in-out .3s;}
+
+/* 二级 */
+#nav li ul li{line-height: 1; line-height: 24px; padding: 8px 18px; z-index: 1000; text-align: left;}
+#nav li ul li a{font-size: 16px; color: #fff;}
+/*一级动效*/
+#nav li:hover > a{color: #951207;}
+#nav li:hover > ul{ opacity: 1; top: 50px; visibility: visible;}
+
+/* 二级动效 */
+#nav li ul li:hover{background: #7d1006; }
+#nav li ul li:hover > a{ color: #fff; font-weight: 400; }
+```
+
+
+
+**上导航，下banner(带header动效)**
+
+![chrome_IjeSiuhuU0](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_IjeSiuhuU0.png)
+
+```html
+<div class="header transform-area">
+    <div class="header-top clearFix">
+        <div class="w-1200">
+            <a href="{$indexurl}" class="left logo"><img src="{$logo}" alt=""></a>
+            <div class="menu right">
+                <ul id="nav" class="nav w-1200 clearFix">
+                    <li><a href="{$indexurl}">Home</a></li>
+                    {$ltcms_菜单}
+                </ul>
+                <div class="scrollbar"></div>
+            </div>
+        </div>
+    </div>
+    <div class="banner">
+        <img src="{$banner}" alt="">
+        <div class="banner-title w-1200"></div>
+    </div>
+</div>
+```
+
+```css
+.header{min-width: 1200px; position: relative;}
+.header-top{background: #fff; position: relative; z-index: 10; } 
+.header-top >.w-1200{position: relative;height: 80px;} 
+.logo{margin-top: 13px;}
+
+/* 搜索 */
+.search{ position: absolute; right: 0px; top: 50%; margin-top: -20px; display: inline-block;height: 40px;line-height: 40px;background: #EEEEEE; cursor: pointer; -moz-box-sizing: border-box; box-sizing: border-box; padding: 0px 10px;}
+.search .input-text{width: 180px; line-height: 40px; height: 40px; outline: none; border: none;background: #EEEEEE; -webkit-transition:.5s; -o-transition:.5s; -moz-transition:.5s; transition:.5s; color: #333;}
+.search .input-btn{width: 40px; height: 40px;text-align: center; border-radius: 50%; color: #333; -webkit-transition:0.5s; -o-transition:0.5s; -moz-transition:0.5s; transition: 0.5s;}
+.search .input-btn i{display: inline-block; background: url("../images/search.png"); background-repeat: no-repeat; background-position: center center; width: 40px; height: 40px;}
+.search:hover .input-text{width: 180px; margin: 0px 10px;}
+.search:hover .input-btn{color: #333; -webkit-transform: rotateZ(-360deg); -moz-transform: rotateZ(-360deg); -ms-transform: rotate(-360deg); -o-transform: rotateZ(-360deg); transform: rotateZ(-360deg); }
+
+/* banner */
+.banner{position: relative; height: 360px; width: 100%; overflow: hidden;}
+.banner > img{ position: absolute; left: 50%;  margin-left: -960px; height: 360px; z-index: -1;}
+.banner-title{height: 360px; background: url("../images/banner-title.png")no-repeat center center;}
+
+/*默认二级下拉导航菜单*/
+.menu{height: 80px;position: relative; }
+#nav{width: 800px;}
+#nav li{position: relative;  cursor: pointer;}
+#nav > li{height: 80px; line-height: 80px; float: left; -moz-box-sizing: border-box; box-sizing: border-box; color: #999;}
+#nav > li > a{display: inline-block; height: 100%; color: #333;}
+#nav li ul{position: absolute; display: block; opacity: 0;  visibility: hidden;  left: 10px; top: 80px; width: 140px;  opacity: 1; background: #fff;padding: 13px 0px; z-index: 9999; -moz-box-sizing: border-box; box-sizing: border-box;background: #017CB4; }
+/* 滚动条 */
+.menu .scrollbar{width: 77px; height: 2px; background: #017CB4; position: absolute; left: 0px; top: 78px; opacity: 0; transition: all ease-in-out .3s;}
+/* 二级 */
+#nav li ul li{line-height: 1; line-height: 24px; padding: 8px 18px; z-index: 1000; text-align: left;}
+#nav li ul li a{font-size: 16px; color: #fff;}
+/*一级动效*/
+#nav li:hover > a{color: #017CB4;}
+#nav li:hover > ul{ opacity: 1; top: 80px; visibility: visible;}
+/* 二级动效 */
+#nav li ul li:hover{background: #0184DC; }
+#nav li ul li:hover > a{ color: #fff; font-weight: 400; }
+
+/* header 动效 */
+.header-top.sticky{background: #fff; position: fixed; top: 0px; left: 0px; width: 100%;  z-index: 99999; box-shadow: 0px 5px 5px -4px rgba(171, 181,184, 0.4); animation: smoothScroll 1s forwards;}
+.header-top.sticky ~ .banner{margin-top: 80px; }
+@keyframes jump{
+    0%{
+        transform: translateY(0px);
+    }
+    100%{
+        transform: translateY(-10px);
+    }
+}
+@-webkit-keyframes smoothScroll {
+    0% {
+        -webkit-transform: translateY(-100px);
+                transform: translateY(-100px);
+    }
+    100% {
+        -webkit-transform: translateY(0px);
+                transform: translateY(0px);
+    }
+}
+@keyframes smoothScroll {
+    0% {
+        -webkit-transform: translateY(-100px);
+                transform: translateY(-100px);
+    }
+    100% {
+        -webkit-transform: translateY(0px);
+                transform: translateY(0px);
+    }
+}
+```
+
+
+
+**导航和banner一体(带header动效)**
+
+![chrome_92ektLIvac](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/chrome_92ektLIvac.png)
+
+```html
+<div class="header transform-area">
+    <div class="banner"><img src="{$banner}" alt=""></div>
+    <div class="header-content">
+        <div class="header-top">
+            <div class="w-1200 clearFix">
+                <a class="logo left"><img src="{$logo}" alt=""></a>
+                <div class="menu right">
+                    <ul id="nav" class="nav">
+                        <li><a href="{$indexurl}">首页</a></li>
+                        {$ltcms_菜单}
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="banner-title w-1200"></div>
+    </div>
+</div>
+```
+
+```css
+/* Header-S */
+.header{height: 920px; position: relative;  min-width: 1200px; overflow: hidden;}
+.banner{position: absolute; left: 0px; top: 0px; z-index: -10;}
+.header-content{height: 100%;}
+.header-top{height: 120px;}
+.banner-title{height: calc(100% - 120px); background: url("../images/banner-title.png")no-repeat left center;}
+
+.logo{ margin-top: 35px;}
+
+/*默认二级下拉导航菜单*/
+.menu{width: 710px; margin-top: 25px;}
+#nav li{position: relative;  cursor: pointer;}
+#nav li > a{color: #333; font-size: 18px;}
+#nav > li{height: 60px; line-height: 60px; float: left;}
+#nav li ul{position: absolute; display: block; opacity: 0;  visibility: hidden;  left: -17px; top: 90px; width: 140px;  opacity: 0; background: #fff; transition: all ease-in-out .3s; padding: 13px 0px; z-index: 9999; box-sizing: border-box; }
+#nav>li>ul{  box-shadow: 0px -2px 8px 0px rgba(0, 0, 0, 0.3); }
+/* 三角形 */
+#nav>li>ul::after { position: absolute; top: 0px; left: 45px; content: ''; border-left: 10px solid transparent; border-right: 10px solid transparent; border-top: 10px solid #fff;}
+#nav>li>ul::before { content: ''; position: absolute; left: 60px; top: -10px;  width: 20px; height: 20px; background: #fff; transform: rotate(135deg);
+    box-shadow: 1px -2px 8px 0px rgba(0, 0, 0, .3);}
+#nav>li>ul::after { position: absolute;bottom: 0px;left: 55px;content: '';width: 20px;height: 8px;background: #fff;}
+/* 二级 */
+#nav li ul li{line-height: 1; line-height: 24px; padding: 8px 18px; z-index: 1000; text-align: left;}
+#nav li ul li a{font-size: 16px;}
+/*一级动效*/
+#nav li:hover > a{color: #009B63; font-weight: bold;}
+#nav li:hover > ul{ opacity: 1; top: 68px; visibility: visible;}
+/* 二级动效 */
+#nav li ul li:hover{background: #009B63; }
+#nav li ul li:hover > a{ color: #fff; font-weight: 400; }
+
+/* header动效 */
+.header-top.sticky{background: #fff; position: fixed; top: 0px; left: 0px; width: 100%; animation: smoothScroll 1s forwards; z-index: 99999; box-shadow: 0px 5px 5px -4px rgba(0 , 155, 99, 0.4);}
+.header-top.sticky .logo{background: #333;}
+.header-top.sticky ~ .banner-title{margin-top: 120px;}
+@-webkit-keyframes smoothScroll {
+    0% {
+        -webkit-transform: translateY(-100px);
+        transform: translateY(-100px);
+    }
+    100% {
+        -webkit-transform: translateY(0px);
+        transform: translateY(0px);
+    }
+}
+@keyframes smoothScroll {
+    0% {
+        -webkit-transform: translateY(-100px);
+        transform: translateY(-100px);
+    }
+    100% {
+        -webkit-transform: translateY(0px);
+        transform: translateY(0px);
+    }
+}
+
+```
+
+
+
+
+
 
 
 ## Main
@@ -519,25 +784,78 @@ $('.input-btn, .input-text, .search-input').click(function(event){
 
 ### Swiper轮播
 
+```html
+<style>
+    *{margin: 0px; padding: 0px; list-style: none;}
+    #swiper1{width: 1200px; height: 340px; position: relative;}
+    #swiper1 .swiper-wrapper{ list-style: none;}
+    #swiper1 .swiper-slide{float: left; height: 100%; box-sizing: border-box; transition: all ease-in-out .3s;}
+    #swiper1 .swiper-slide img{width: 100%; height: 100%;}
+    /* 箭头 */
+    #swiper1 .arrow{width: 40px; height: 100px; line-height: 100px; background-color: rgba(0, 0, 0, 0.1); position: absolute; top: 50%; margin-top: -50px; text-align: center; color: #fff; font-size: 30px; cursor: pointer; }
+    #swiper1 .arrow-left{left: 30px;}
+    #swiper1 .arrow-right{right: 30px;}
+
+    /* 小圆点 */
+    #swiper1 .pagin1{position: absolute; left: 50%; transform: translateX(-50%); bottom: 14px; height: 10px; z-index: 10; }
+    #swiper1 .pagin1 span{display: inline-block; margin-right: 10px; box-sizing: border-box; cursor: pointer;}
+    #swiper1 .pagin1 .swiper-pagination-switch{width: 10px; height: 10px;  border: 1px solid #FFFFFF;}
+    #swiper1 .pagin1 .swiper-active-switch{background: #fff;}
+</style>
+    <div class="swiper-container" id="swiper1">
+        <div class="arrow-left arrow"><</div>
+        <div class="arrow-right arrow">></div>
+        <ul class="swiper-wrapper">
+            <li class="swiper-slide"><a href="#">
+                <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3881048221,3833583369&fm=26&gp=0.jpg" alt="">
+            </a></li>
+            <li class="swiper-slide"><a href="#">
+                <img src="https://ss0.bdstatic.com/70cFvHSh_Q1YnxGkpoWK1HF6hhy/it/u=3881048221,3833583369&fm=26&gp=0.jpg" alt="">
+            </a></li>
+        </ul>
+        <div class="pagin1"></div>
+    </div>
+<script>
+    var mySwiper1 = new Swiper('#swiper1', {
+        pagination:'.pagin1',
+        paginationClickable: true,
+        speed: 800,
+        autoplayDisableOnInteraction:false,
+    })
+    $('.arrow-left').on('click', function(e){
+        e.preventDefault()
+        mySwiper1.swipePrev()
+    })
+    $('.arrow-right').on('click', function(e){
+        e.preventDefault()
+        mySwiper1.swipeNext()
+    })
+</script>
+```
+
+
+
+
+
 ### Swiper多个轮播
 
 ```html
 <style>
-#home .area7-content{width: 1200px; overflow: hidden; margin: 0 auto;}
-#home #swiper7{width: 1240px; height: 340px;}
-#home #swiper7 .swiper-wrapper{}
-#home #swiper7 .swiper-slide{float: left;width: 270px!important; height: 340px; box-sizing: border-box; margin-right: 40px; border: 2px solid #fff; transition: all ease-in-out .3s;}
+#home .area1-content{width: 1200px; overflow: hidden; margin: 0 auto;}
+#home #swiper1{width: 1240px; height: 340px;}
+#home #swiper1 .swiper-wrapper{}
+#home #swiper1 .swiper-slide{float: left;width: 270px!important; height: 340px; box-sizing: border-box; margin-right: 40px; border: 2px solid #fff; transition: all ease-in-out .3s;}
+#home .pagin1{position: absolute; right: 14px; bottom: 14px; height: 10px; z-index: 10;}
+#home .pagin1 span{display: inline-block; margin-right: 10px; box-sizing: border-box;}
+#home .pagin1 .swiper-pagination-switch{width: 10px; height: 10px;  border: 1px solid #FFFFFF;}
+#home .pagin1 .swiper-active-switch{background: #fff;}
 </style>
-<div class="area7-content">
-    <div class="swiper-container" id="swiper7">
-        <ul class="clearFix swiper-wrapper">
-            {$ltcms_区域7}
-        </ul>
-    </div>
+<div class="area1-content">
+
 </div>
 <script>
-    // area7
-    var mySwiper7 = new Swiper('#swiper7', {
+    // area1
+    var mySwiper7 = new Swiper('#swiper1', {
         paginationClickable: true,
         slidesPerView: 4,
         speed: 800,
@@ -551,6 +869,106 @@ $('.input-btn, .input-text, .search-input').click(function(event){
 ![fTeZakmsYw](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/fTeZakmsYw.gif)
 
 单个slide的宽度是根据容器总宽度/slide个数得出的。单次滚动距离也是根据slide宽度来滚动的。如果需要给slide边距（margin），且不影响滚动距离。则需要强制slide的width + margin刚好等于swiper计算出的slide宽度。这样就不会影响滚动。
+
+
+
+### MSClass
+
+```js
+参数
+// 1. []数组表示容器ID (必选)
+// 2. 0,1,2,3分别表示上下左右
+// 3. 滚动的步长（step），默认为2，数值越大滚动越快
+// 4. 容器可视宽度
+// 5. 容器可视高度
+// 6. 定时器，默认30,越小滚动越快
+// 7. 开始前的等待时刻，0表示不等待
+// 8. 间歇滚动间距 (可选,默认为翻屏宽/高度,该数值与延迟均为0则为鼠标悬停控制,-1禁止鼠标控制)
+
+解释
+// 高度参数与li高度共同决定显示效果，最好两者保持一致。显示效果取决于Math.min(参数，li的高)
+// ul列表的总宽度只由li盒子的总宽度 * li盒子个数决定
+// 下面的ul标签的存在与否，决定循环的是ul还是li，如果存在ul,则循环的是ul，不然就是li
+```
+
+```css
+.area-content{height: 168px; overflow: hidden; margin: 100px;}
+.area-content li{float: left; width: 200px; height: 185px; margin-right: 20px;}
+.area-content li img{width: 100%; height: 155px; display: block;}
+.area-content li .info{height: 35px; line-height: 35px; text-align: center; color: #333;}
+```
+
+```html
+<div class="area-content" id="list-content">
+    <div id="list">
+        <ul>
+            {$ltcms_区域3}
+        </ul>
+    </div>
+</div>
+
+//区域3
+<li>
+    <a href="#link" title="#title" target="#target">
+        <img src="#img_url">
+        <div class="info">
+            <p>#title<p>
+        </div>
+    </a>
+</li>
+
+```
+
+```js
+(function() {
+    var gd1 = new Marquee(["list-content", "list"], 2, 1, 1170, 185, 30, 0, 0);
+    var btnLeft = document.querySelector("#tab-left");
+    var btnRight = document.querySelector("#tab-right");
+    if(btnLeft) btnLeft.onclick = function(event) {gd1.Direction = 2;};
+    if(btnRight)btnRight.onclick = function(event) {gd1.Direction = 3;};
+})();
+```
+
+![360chrome_zXGl8b9P24](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_zXGl8b9P24.png)
+
+2. 
+
+```css
+.area-content{height: 168px; overflow: hidden; margin: 100px;}
+.area-content li{ position: relative; float: left; width: 200px; height: 185px; margin-right: 20px;}
+.area-content li img{width: 100%; height: 100%; display: block;}
+.area-content li .info{position: absolute;left: 0px; bottom: 0px; background-color:rgba(0, 0, 0, 0.5);color: #fff; width: 100%; height: 35px; line-height: 35px; text-align: center;}
+```
+
+![360chrome_aNyJBRNRZK](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_aNyJBRNRZK.png)
+
+
+
+### 文字列表
+
+```html
+<style>
+    #home .area2-content{margin-top: 14px; height: 280px; border: 1px solid #EEEEEE;    padding: 10px 28px 28px; box-sizing: border-box;}
+    #home .area2-content ul{}
+    #home .area2-content li{height: 35px; line-height: 35px; border-bottom: 1px dashed #999; box-sizing: border-box;}
+    #home .area2-content li span{float: left; font-size: 14px;}
+    #home .area2-content li .time{float: right; vertical-align: middle; font-size: 10px; font-style: normal; color: #BFBFBF;}
+    #home .area2-content li:last-child{border-bottom: 1px solid transparent;}
+</style>
+<ul class="clearFix">
+    {$ltcms_区域2}
+</ul>
+<li><a href="#link" target="#target">
+    <span>#title</span>
+    <i class="time">#time</i>
+</a></li>
+```
+
+### 图文列表
+
+```html
+
+```
 
 
 
@@ -900,7 +1318,7 @@ a{color: #fff; text-decoration: none;}
 
 /*一级动效*/
 #nav li:hover > a{color: #28ae65;}
-#nav li:hover > ul{ opacity: 1; top: 60px; visibility: visible;}
+#nav li:hover > ul{opacity: 1; top: 60px; visibility: visible;}
 /*二级动效*/
 </style>
 <div class="menu">
@@ -1200,6 +1618,63 @@ $('.video-mask .close').click(function () {
 })
 ```
 
+**首页视频播放**
+
+```html
+<style>
+.video-area{position: relative; width: 100%; height: 100%;}
+.video-area video{width: 100%; height: 100%;}
+.mask{position: absolute; left: 0px; top: 0px; right: 0px; bottom: 0px; margin:auto ; background: rgba(0, 0, 0, 0.3);}
+.mask .play-btn{position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%); background: url("../images/play.png")no-repeat center center; width: 70px; height: 70px; background-size: 100% 100%; cursor: pointer; opacity: 1; transition: all ease-in-out .3s; z-index: 10}
+.mask.hasPlay{opacity: 0; z-index: -10;}
+</style>
+<div class="video-area">
+    <video src="{$ltcms_区域1}" poster="" controls></video>
+    <div class="mask"><div class="play-btn"></div></div>
+</div>
+```
+
+
+
+```js
+$('.mask').on('click',function(){
+    if($(this).hasClass('hasPlay')){
+        $('video')[0].pause();
+        $(this).removeClass('hasPlay');
+    }else{
+        $('video')[0].play();
+        $(this).addClass('hasPlay');
+    }
+})
+```
+
+方式二：只由paly-btn控制播放暂停
+
+```js
+$('.area2').on('click', function (e) {
+    var video = $(this).find('video')[0];
+    var videoStatus = video.paused;
+    if (videoStatus) {    //视频暂停中
+        $('.home-video')[0].play();
+        $(this).find('.mask').addClass('hasPlay');
+    } else {
+        $('.home-video')[0].pause();
+        $(this).find('.mask').removeClass('hasPlay');
+    }
+})
+```
+
+        //PC端关闭三个点，禁用下载和画中画
+        if (/Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)) {
+            // 移动
+        } else {
+            // PC
+            $('video').attr({'disablePictureInPicture':'true','controlslist':'nodownload noremoteplayback'})//关闭三个点，禁用下载和画中画
+        }
+
+
+
+
 ### 11. 强制webkit渲染
 
 ```html
@@ -1209,7 +1684,51 @@ $('.video-mask .close').click(function () {
 <script>/*@cc_on window.location.href="http://support.dmeng.net/upgrade-your-browser.html?referrer="+encodeURIComponent(window.location.href); @*/</script>
 ```
 
+### 12. 弹出层
 
+```html
+<style>
+/* 二维码弹出层 */
+.popups-area{opacity: 0; z-index: -1000; position: fixed; left: 0px; top: 0px; right: 0px; bottom: 0px; background: rgba(0, 0, 0, 0.5);}
+.popups-area .popups{width: 350px; height: 250px; position: absolute; left: 50%; top: 50%; margin-left: -175px; margin-top: -125px; background: #fff; padding: 43px; box-sizing: border-box; text-align: center; transform: scale(0); transition: all ease-in-out .3s;}
+.popups-area .popups p{margin-bottom: 20px;}
+.popups-area .popups img{}
+.popups-area .popups .close{position: absolute;right: 10px; top: 5px; cursor: pointer; font-size: 18px;}
+.popups-area.active{opacity: 1; z-index: 1000;}
+.popups-area.active .popups{transform: scale(1);}
+</style>
+<!--二维码弹出层 -->
+<div class="popups-area">
+    <div class="popups">
+        <p>扫码查看4月线下培训详情介绍</p>
+        <img src="" alt="">
+        <div class="close">x</div>
+    </div>
+</div>
+```
+
+```js
+// 参数1：需要被接管的元素，参数2：接管方
+function popups(elm,target){
+    $(elm).on('click',function(event){
+        if(event.target.nodeName!== this.nodeName)event.target = this
+        var QrCode = $(this).attr('src')
+
+        $(target).find('img').attr('src',QrCode)
+        $(target).addClass('active')
+    })
+    $(target).click(function(event){
+        if($(event.target).hasClass('popups'))return false;
+        $(target).removeClass('active')
+    })
+    $(target).find('.close').on('click',function(){
+        $(target).removeClass('active')
+    })
+}
+popups('.content2 .area2-next',".popups-area");
+```
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/ockZljcT5g.gif" alt="ockZljcT5g" style="zoom:50%;" />
 
 
 
@@ -1513,7 +2032,7 @@ var tab1 = new Tabs({
 
 ![taHO1Z7Nxr](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/frJb8bNJ4L.gif)
 
-![frJb8bNJ4L](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/wwSBlKMG0i.gif)
+
 
 
 
@@ -2136,6 +2655,210 @@ class Pager {
 }
 ```
 
+#### 力拓风格
+
+```js
+// 步骤：
+// 1、首先创建一个配置对象，存放分页插件的一些默认配置信息，如果用户传入了新的配置信息，
+// 与默认配置信息进入混入（mixin）,可用Object.assign或展开运算符。
+// 2、给容器创建各种元素，首页、上一页、数字页码、下一页、尾页 数据信息（1/100）搜索
+// 3、给容器绑定事件委托，委托到各个源目标。源目标根据类名去区分（classList.contains()）
+
+//处理点：
+//数字页码处理：
+//在数字页码中，当前页码一般情况在都在最中间，最左边的数字页码为（当前页码 - Math.floor(数字页码个数/2)），不包括首尾页
+//最右边的数字页码为（最左边数字页码 + 数字页码总数 -1）。
+//当数字页码的current
+//最后再根据for循环，长度为left+right。
+
+class Pager {
+    constructor(options) {
+        let defaultOptions = {
+            container: document.querySelector('#pager'),
+            total: 1000,     //总数据量
+            pageSize: 10,     //数据展示条数 
+            current: 1,       //当前页码，最小为1
+            panelNumber: 5,    //数字页码个数
+            firstText: '',	//首页
+            prevText: '<',		//上一页
+            nextText: '>',		//下一页
+            lastText: '',		//尾页
+        }
+        // 混入（mixin），得到最终的配置
+        this.options = Object.assign({}, defaultOptions, options);
+        // 或者
+        // this.options = {
+        //     ...defaultOptions,
+        //     ...options
+        // }
+        this.render();
+        this.bindEvent();
+    }
+
+    /**
+     * 给容器初始化各种元素,并根据当前current情况添加一个disabled类名
+     */
+    render() {
+        // 每次渲染之前都要置空容器内的内容，防止多次渲染容器内容生成多次
+        this.options.container.innerHTML = '';
+        let disabled = '';
+        if (this.options.current == 1) {
+            disabled = 'disabled'
+        }
+       
+        //创建上一页
+        this.createDom('prev ' + disabled, this.options.prevText);
+		
+		// 创建首页
+		if(this.options.current > this.options.panelNumber){
+			this.createDom('first ' + disabled, this.options.firstText || 1);
+		}
+		
+        //创建数字页码（没有text部分，需创建）
+        this.CreateNumberPager();
+
+
+		
+        disabled = ''//置空，再次判断
+        if (this.options.current == this.getPageNumber()) {
+            disabled = 'disabled'
+        }
+		//创建尾页
+		if(this.options.current !== this.getPageNumber()){
+			this.createDom('last ' + disabled, this.options.lastText || this.getPageNumber());
+		}
+        //创建下一页
+        this.createDom('next ' + disabled, this.options.nextText);
+		
+		// 总条数
+        // let span = document.createElement('span');
+		// span.className = 'total-num'
+        // span.innerHTML = `共<i>${this.options.total}</i>条</i>`;
+        // this.options.container.appendChild(span)
+
+        // //当前页码 / 总页码
+        // let span = document.createElement('span');
+        // span.innerHTML = `<i>${this.options.current}</i>/ <i>${this.getPageNumber()}</i>`;
+        // this.options.container.appendChild(span)
+
+        // //创建input输入框
+        // let input = document.createElement('input');
+        // this.options.container.appendChild(input);
+
+
+    }
+
+    /**
+     * 创建Dom元素
+     * @param {String} extraClass   //给元素添加类名
+     * @param {String} content      //给元素添加内容
+     */
+    createDom(extraClass, content) {
+        let a = document.createElement('a');
+        a.setAttribute('href', 'javascript:void(false)')
+        a.className = 'pager-item ' + extraClass;
+        a.innerHTML = content;
+		// 给首页和尾页添加...页
+		if(extraClass.indexOf('last') > -1) this.createDom('omit disabled' , '...');
+        this.options.container.appendChild(a);//这是添加正常的a标签
+		if(extraClass.indexOf('first') > -1) this.createDom('omit disabled' , '...');
+        return a;
+    }
+
+    /**
+     * 得到总页码数
+     */
+    getPageNumber() {
+        return Math.ceil(this.options.total / this.options.pageSize);
+    }
+
+    /**
+     * 生成数字页码text部分
+     */
+    CreateNumberPager() {
+        let minNumber = this.options.current - Math.floor(this.options.panelNumber / 2);
+        //如果最小页小于最小页数
+        if (minNumber < 1) {
+            minNumber = 1
+        }
+        let maxNumber = minNumber + this.options.panelNumber - 1;
+        let pageNumber = this.getPageNumber()
+        //如果最大页超过了总页数，
+        if (maxNumber > pageNumber) {
+            maxNumber = pageNumber
+        }
+        let active = 'active';
+        for (let i = minNumber; i <= maxNumber; i++) {
+            if (this.options.current == i) {
+                this.createDom('number ' + active, i);
+            } else {
+                this.createDom('number', i);
+
+            }
+
+        }
+
+    }
+
+    /**
+     * 给容器绑定事件
+     */
+    bindEvent() {
+        let that = this
+        this.options.container.addEventListener('click', function (event) {
+            let e = event || window.event;
+            let target = e.target || e.srcElement;
+            if (target.classList.contains('first') && !target.classList.contains('disabled')) {
+                that.toPage(1);
+            }
+            else if (target.classList.contains('prev') && !target.classList.contains('disabled')) {
+                that.toPage(that.options.current - 1)
+            }
+            else if (target.classList.contains('next') && !target.classList.contains('disabled')) {
+                that.toPage(that.options.current + 1);
+            }
+            else if (target.classList.contains('last') && !target.classList.contains('disabled')) {
+                that.toPage(that.getPageNumber());
+            }
+            else if (target.classList.contains('number')) {
+                that.toPage(+target.innerHTML)
+            }
+        })
+    }
+
+    /**
+     * 点击后更改current并重新渲染dom
+     */
+    toPage(page) {
+        if (page < 1) {
+            page = 1
+        }
+        let pageNumber = this.getPageNumber();
+        if (page > pageNumber) {
+            page = pageNumber
+        }
+        if (page == this.options.current) {
+            return;
+        }
+        this.options.current = page;
+        this.render();
+
+        //辅助函数，可有可无，返回当前页码到外部
+        if(this.options.renderAfter){
+            this.options.renderAfter(this.options.current)
+        }
+    }
+
+
+}
+
+
+```
+
+
+
+
+
 
 
 ### 4.验证
@@ -2534,9 +3257,7 @@ $(window).scroll(function(){
 })
 ```
 
-![wwSBlKMG0i](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/COlBcSTrPc.gif)
-
-
+![frJb8bNJ4L](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/wwSBlKMG0i.gif)
 
 ### 9. 滚动公告
 
@@ -2597,6 +3318,254 @@ scrollNotice();
 
 
 
+### 10. 单层级拖拽排序
+
+```html
+<style>
+    *{margin: 0; padding: 0px; list-style: none;}
+    body{margin: 50px;}
+    .order-btn{border: none; outline: none; padding: 10px 25px; background: #ccc;box-shadow: 0px 2px 4px 0px #000; cursor: pointer; user-select: none;-moz-user-select: none; -ms-user-select: none; -webkit-user-select: none;}
+    .order-btn:active{box-shadow: 0px 2px 6px 0px #000;}
+    .wrapper{border: 1px solid #ccc; padding: 10px 10px 0px 10px; margin-top: 50px; position: relative; width: 400px;}
+    .wrapper li{width: 400px; height: 40px; line-height: 20px; background: #ccc; padding: 10px; box-sizing: border-box; margin-bottom: 10px; border: 1px solid #333; user-select: none;-moz-user-select: none; -ms-user-select: none; -webkit-user-select: none;}
+
+
+
+    /* 点击排序后的样式 */
+    .order-btn.on{background-color: #2ecc71; color: #fff;}
+
+    /* 启动编辑时，给所有li元素添加.edit-able类 */
+    li.drop-able{background: #eee; border: 1px solid transparent; cursor: move; transition: all ease-in-out .3s;}
+    /* 启动编辑后，选中元素时添加move-item类 */
+    li.moving-item{ box-shadow: 4px 4px 4px #AAAAAA; opacity: 0.5;background: #eee; border: 1px solid transparent; cursor: default;}
+    /* 点击目标li元素后出现的虚拟占位元素 */
+    .solid-box{ position: absolute; background: #fff9c4; border: 1px dashed #ff9800; box-sizing: border-box; z-index: -1;}
+
+</style>
+<button class="order-btn">排序</button>
+<ul class="wrapper" id="drag1">
+    <li>01</li>
+    <li>02</li>
+    <li>03</li>
+    <li>04</li>
+    <li>05</li>
+    <li>06</li>
+    <li>07</li>
+    <li>08</li>
+    <li>09</li>
+    <li>10</li>
+    <li>11</li>
+</ul>
+
+<script>
+    window.onload = function(){
+        var drag1 = new DragDrop({
+            selector:'#drag1',
+            orderBtn:'.order-btn',
+            orderFinish:function(orderList){
+                // 每次点击保存后执行的函数，可用于发送请求
+                console.log('我被调用了',orderList);
+            }
+        })
+        }
+    function DragDrop(options){
+        if(!options) return;
+        this.wrapper = document.querySelector(options.selector);
+        this.orderBtn = document.querySelector(options.orderBtn);
+        this.orderFinish = options.orderFinish;
+        this.items = this.wrapper.querySelectorAll('li');
+        this.allPosXY = []; //记录所有dom元素的原始位置
+        this.hasOpen = false;   //记录排序按钮是否打开
+        this.canMove = false;   //标识mousemove事件是否可用。便于mouseup时取消move事件
+        this.movingItem;        //记录选中的dom元素
+        this.movingItemIdx;     //记录选中dom元素的索引
+        this.movingItemH;       //记录选中dom元素的高度，方便比较时候用到
+        this.init();
+    }
+    DragDrop.prototype.init = function(){
+        this.wrapper.style.height = this.wrapper.offsetHeight + 'px';//初始化容器高度，防止塌陷
+        for(var i = 0; i < this.items.length; i++){ //记录所有dom元素所当前在位置，放入allposXY数组
+            var posXY = {}
+            posXY.x = this.items[i].offsetLeft;
+            posXY.y = this.items[i].offsetTop;
+            this.allPosXY.push(posXY);
+            this.items[i].setAttribute('data-index',i)
+        }
+
+        for(var i = 0; i < this.items.length; i++){ //把allposxy数组坐标使用，left，top初始化。
+            setCss(this.items[i],{position:'absolute',left:this.allPosXY[i].x+'px',top:this.allPosXY[i].y+'px'})
+        }
+        this.bindEvent();
+    }
+
+    DragDrop.prototype.bindEvent = function(){
+        var that = this;
+        this.orderBtn.addEventListener('click',function(e){ //添加按钮click监听事件
+            that.edit()
+        })
+
+        for(var i = 0; i < this.items.length; i++){
+            this.items[i].addEventListener('mousedown',function(e){
+                if(that.hasOpen){   //按钮为打开状态下才能触发事件
+                    that.mouseDown(e,this);//谁调用指向谁
+                }
+            })
+            this.items[i].addEventListener('mouseup',function(e){
+                if(that.hasOpen && that.canMove){   //按钮为打开状态下才能触发事件
+                    that.canMove = false;
+                    that.mouseUp(e)
+                }
+            })
+        }
+        this.wrapper.addEventListener('mousemove',function(e){
+            if(that.canMove){
+                that.mouseMove(e)
+            }
+        })
+    }
+    DragDrop.prototype.edit = function(){
+        if(!this.hasOpen){  //如果按钮是关闭状态
+            this.hasOpen = true;
+            addClass(this.orderBtn,'on');
+            for(var i = 0; i < this.items.length; i++){
+                addClass(this.items[i],'drop-able');
+            }
+        }else{//如果按钮是打开状态
+            this.hasOpen = false;
+            removeClass(this.orderBtn,'on');
+            for(var i = 0; i < this.items.length; i++){
+                removeClass(this.items[i],'drop-able');
+            }
+
+        }
+    }
+    DragDrop.prototype.mouseDown = function(e,movingItem){
+        console.log('mousedown执行了');
+        this.canMove = true;
+        this.movingItem = movingItem;   //记录当前选中dom元素
+        this.movingItemH = movingItem.offsetHeight;
+        this.movingItemIdx = movingItem.getAttribute('data-index');//记录当前选中dom元素的索引
+        this.createSolidElm()   //创建占位元素
+        addClass(this.movingItem,'moving-item')//为选中元素添加移动类名
+        removeClass(this.movingItem,'drop-able')//移除可拖拽样式。
+        this.movingItem.style.zIndex = 100;
+        this.initX = e.offsetX;
+        this.initY = e.offsetY;
+        console.log('相对于元素左上角为原点的坐标系',this.initX,this.initY);
+    }
+    DragDrop.prototype.mouseMove = function(e){
+        console.log('mousemove执行了');
+
+        var relativeWindowX = e.pageX;
+        var relativeWindowY = e.pageY;
+        console.log('相对于窗口左上角为原点的坐标',relativeWindowX,relativeWindowY);
+
+        this.moveX = relativeWindowX - this.initX - this.wrapper.offsetLeft;
+        this.moveY = relativeWindowY - this.initY - this.wrapper.offsetTop;
+        setCss(this.movingItem,{left:this.moveX+'px',top:this.moveY+'px'})  //拖拽渲染
+        console.log('移动坐标：',this.moveX,this.moveY);
+        // 排序
+        this.sort();
+    }
+    DragDrop.prototype.mouseUp = function () {
+        console.log('mouseup执行了');
+
+        // 鼠标抬起后，移除被选中元素移动样式,并恢复可拖拽样式
+        removeClass(this.movingItem, 'moving-item');
+
+        // 把占位元素的位置赋值给选中元素
+        this.allPosXY[this.movingItemIdx].x = parseInt(this.solidBox.style.left);
+        this.allPosXY[this.movingItemIdx].y = parseInt(this.solidBox.style.top);
+        addClass(this.movingItem, 'drop-able');
+        //给li块应用新的位置数据。
+        for (var i in this.allPosXY) {
+            setCss(this.items[i], { 'position': 'absolute', 'left': this.allPosXY[i].x + 'px', 'top': this.allPosXY[i].y + 'px' })
+        }
+
+        // 移除选中元素的占位元素
+        this.wrapper.removeChild(this.solidBox)
+        this.movingItem.style.zIndex = null;
+        this.orderFinish(this.allPosXY)
+        //清空存放活跃li块的变量。
+        this.movingItem = null;
+    }
+
+    DragDrop.prototype.createSolidElm = function(){           
+        this.solidBox = document.createElement('div');
+        var width = this.movingItem.offsetWidth +'px';
+        var height = this.movingItem.offsetHeight +'px';
+        var left = this.movingItem.style.left;
+        var top = this.movingItem.style.top;
+        setCss(this.solidBox,{'position':'absolute',left,top,width,height})
+        this.solidBox.className = 'solid-box';
+        this.wrapper.appendChild(this.solidBox);
+    }
+
+    DragDrop.prototype.sort = function(){
+        for(var i = 0; i < this.items.length; i++){
+            if( i !== this.movingItemIdx){//首先先排除自身与自身的比较
+                // 这里为什么用allPosXYClone而不用allposXY，是因为
+                if(this.movingItemH + this.moveY > this.allPosXY[i].y + this.movingItemH/2 && this.movingItemH + this.moveY < this.allPosXY[i].y + this.movingItemH){   //设立交换条件
+                    this.exchange(this.movingItemIdx,i)
+                }
+            }
+        }
+    }
+
+    DragDrop.prototype.exchange = function(movingItemIdx,i){
+        // 将占位元素与被交换元素的坐标交换，应用坐标重新渲染。
+        var ts = {};    //占位符坐标
+        ts.x = parseInt(this.solidBox.style.left);
+        ts.y = parseInt(this.solidBox.style.top);
+
+        // 占位元素的坐标与选中元素坐标一致。
+        // 先把交换元素的坐标给占位元素，并渲染
+        // 再把ts坐标给交换元素，再单独渲染交换元素
+        setCss(this.solidBox,{'left':this.allPosXY[i].x +'px','top':this.allPosXY[i].y +'px'})
+        this.allPosXY[i] = ts;
+        setCss(this.items[i],{'left':this.allPosXY[i].x +'px','top':this.allPosXY[i].y+'px'});
+
+    }
+
+    //封装设置css属性方法
+    function setCss(obj, cssList) {
+        for (var attr in cssList) {
+            obj.style[attr] = cssList[attr];
+        }
+    }
+
+    //封装类名操作
+    //增加类名
+    function addClass(obj, _classname) {
+        var classNames = obj.className //获取当前按钮的class,返回的是字符串
+        var tf = classNames.search(_classname) >= 0 ? true : false; //查找匹配的类名位置，如果返回-1说明没有这个类名， classNames.search(_classname)>=0 == false
+        if (!tf) {
+            if(classNames == ""){
+                classNames = _classname;
+            }else{
+                classNames += ' ' + _classname;  
+            }
+            obj.className = classNames;
+        }
+    }
+    //删除类名
+    function removeClass(obj, _classname) {
+        var classNames = obj.className.split(' ');
+        var index = classNames.indexOf(_classname);
+        classNames.splice(index, 1);
+        classNames = classNames.toString().replace(',', ' ');
+        obj.className = classNames;
+    }
+    // 添加类名
+</script>
+```
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/9w91wUjaco.gif" alt="9w91wUjaco" style="zoom:80%;" />
+
+
+
+
+
 ## 3. jquery常用方法封装
 
 ### 1. 表单数据转JSON
@@ -2624,6 +3593,15 @@ scrollNotice();
 ```
 
 ### 2. 计算单行最佳marginRight
+
+```js
+    // 左侧侧边栏若不存在二级栏目数据，则隐藏
+    if ($('.ny-left-content ul').children('li').length == 0) {
+        $('.ny-left').css({ display: 'none' })
+    }
+```
+
+
 
 ```js
 //首先判断总的item长度是否超过wrapper容器宽度，分三种情况
@@ -2714,5 +3692,70 @@ function resizeMarginRight(wrapper) {
 $(function(){
     resizeMarginRight('.ny-right-content ul');
 })
+```
+
+如果出现ul宽度不准的问题，则大部分是由执行顺序导致的问题。把文件放到后面执行即可
+
+
+
+
+
+## 4. JS常用工具方法
+
+### 1. 格式化多行文本成\<Li>
+
+```
+width: 250px;
+margin: 0 auto;
+line-height: 24px;
+padding-top: 79px;
+font-size: 14px;
+```
+
+
+
+```html
+<ul id="DoubleText" class="honor">
+    国家新能源类资源库光伏组副组长
+    国家级光伏技术虚拟仿真实训中心负责人
+    广东省教学成果一等奖 主持人
+    中山大学太阳能系统研究所博士后
+    广东省高等职业教育专业领军人才
+    广东省“千百十工程”省级培养对象南粤优秀教师
+</ul>
+```
+
+```js
+function formatDoubleText(wrapper) {
+    var wrapper = document.querySelector(wrapper);
+    var arr = wrapper.innerHTML.replace("\r\n", "\n").trim().split('\n')
+    var htmlCont = "";
+    for (var i = 0; i < arr.length; i++) {
+        htmlCont += "<li>" + arr[i].trim() + "</li>";
+    }
+    wrapper.innerHTML = htmlCont;
+}
+formatDoubleText('#DoubleText')
+```
+
+![360chrome_vHfPfNFyD5](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_vHfPfNFyD5.png)
+
+### 2. 获取图片真实尺寸
+
+```js
+IE7+浏览器都能兼容的函数封装：
+function getNaturalSize (DomElement) {
+    var natureSize = {};
+    if(window.naturalWidth && window.naturalHeight) {
+        natureSize.width = DomElement.naturalWidth;
+        natureSizeheight = DomElement.naturalHeight;
+    } else {
+       var img = new Image();
+        img.src = DomElement.src;
+        natureSize.width = img.width;
+        natureSizeheight = img.height;
+    }
+    return natureSize;
+}
 ```
 

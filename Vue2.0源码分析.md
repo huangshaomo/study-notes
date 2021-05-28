@@ -666,30 +666,35 @@ let data = {
     }
 }
 
-let vm = {}
-function proxyData(vm, data) {
-    Object.keys(data).forEach((key) => {
-        if(typeof data[key] == 'object') {
-
-        }
-        Object.defineProperty(vm, key, {
-            get() {
-                console.log('get:', key, data[key])
-                return data[key]
-            },
-            set(newValue) {
-                console.log('set:', key, newValue)
-                if (newValue === data[key]) {
-                    return
-                }
-                data[key] = newValue
-            }
+function observe(target) {
+    // 若target是一个对象，则遍历它
+    if (target && typeof target === "object") {
+        Object.keys(target).forEach((key) => {
+            definedReactive(target, key, target[key]);
         })
-    })
+    }
 }
 
-proxyData(vm,data)
-console.log(vm)
+function definedReactive(target, key, val) {
+    // 属性值也可能是Object类型，这种情况下需要调用observe进行递归遍历。
+    observe(val);
+    Object.defineProperty(target, key, {
+        // 可被枚举到
+        enumerable: true,
+        // 不可配置
+        configurable: false,
+        get: function () {
+            console.log(val+"被访问了");
+            return val
+        },
+        // 监听器函数
+        set: function (newVal) {
+            console.log(`${target}属性的${key}属性从${val}值变成了了${newVal}`);
+            val = newVal;
+        }
+    })
+}
+observe(target)
 ```
 
 
@@ -735,13 +740,79 @@ let vm = new Proxy(data,{
 
 
 
-### 发布/订阅者函数
+### 发布/订阅者模式
 
 ![image-20200807124454992](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200807124454992.png)
 
-### 发布订阅模式
+#### EventBus发布订阅模式简单实现
 
-![image-20200807125637166](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200807125637166.png)
+```js
+class EventEmitter{
+    constructor(){
+        // handlers是一个map,用于存储事件与回调直接的对应关系
+        this.handlers = {
+            // 事件名：数组：存放事件对应的回调函数
+        }
+    }
+    // on方法用于安装事件监听器，它接受目标事件名和回调函数作为参数,回调函数可以有多个
+    on(eventName,cb){
+        // 先检查一下目标事件名有没有对应的监听函数队列
+        if(!this.handlers[eventName]){
+            // 如果没有，那么首先初始化一个监听函数队列
+            this.handlers[eventName] = [];
+        }
+        // 把回调函数推入目标事件的监听函数队列里去
+        this.handlers[eventName].push(cb);
+    }
+
+    // emit方法用于触发目标事件，它接收事件名称和监听函数入参作为参数
+    emit(eventName,...args){
+        // 先检查目标事件是否有监听函数队列
+        if(this.handlers[eventName]){
+            // 如果有，则逐个调用队列里的全部回调函数
+            this.handlers[eventName].forEach((callback) => {
+                callback(...args)
+            })
+        }
+    }
+
+    // 移除某个事件回调队列里的指定回调函数
+    off(eventName,cb){
+        const callbacks = this.handlers[eventName];
+        const index = callbacks.indexOf(cb);
+        console.log(index);
+        if(index !== -1){
+            callbacks.splice(index,1);
+        }
+    }
+
+    // 为事件注册单次监听器,就是目标事件的某个回调函数执行完毕后就移除掉。
+    once(eventName ,cb){
+        // 对回调函数进行包装，使其执行完毕自动被移除：
+        const wrapper = (...args)=>{
+            cb(...args)                 //2. emit时再执行
+            this.off(eventName,wrapper) //该函数执行完毕后再删除
+        }
+        this.on(eventName,wrapper)  //1. 先加入
+    }
+
+
+}
+var vm = new EventEmitter();
+function func1(){console.log('dataChange');}
+function func2(){console.log('dataChange2');}
+// 注册事件
+vm.on('dataChange',func1)
+vm.on('dataChange',func2)
+
+// 触发事件
+vm.emit('dataChange')
+
+// 移除某个事件回调
+vm.off('dataChange',func2)
+
+vm.once('dataChange',func1)
+```
 
 
 
@@ -753,13 +824,31 @@ let vm = new Proxy(data,{
 
 ### 发布订阅与观察者的区别
 
-![image-20200807130202185](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200816171738184.png)
+发布-订阅模式：事件的注册和触发发生在独立于双方的第三方平台。
+
+观察者模式：发布者会直接触及到订阅者。
+
+<img src="https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200807130202185.png" alt="image-20200816171738184" style="zoom:80%;" />
+
+两者的根本区别在于，观察者模式是发布者直接触发订阅者的事件，而发布/订阅模式不是由发布者去触发，而是交由事件中心去触发订阅者的事件，这就是两者最本质的区别。
+
+
+
+
+
+
 
 
 
 ## 手写Vue响应式
 
+Vue的响应式就是由响应式配合发布订阅模式实现的。
+
+
+
 ### Vue
+
+![image-20200807130202185](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/image-20200816171738184.png)
 
 - 功能
   - 负责接收初始化的参数【选项】
@@ -1514,6 +1603,8 @@ watcher对象要在哪里创建呢？我们首先回顾以下Watcher干了什么
 2. 编译模板，创建Watcher，并将Dep.target标识为当前Watcher
 3. 编译模板时，如果使用到了Data中的数据，就会触发Data的get方法，然后调用Dep.addSub将Watcher收集起来
 4. 数据更新时，会触发Data的set方法，然后调用Dep.notify通知所有使用到该Data的Watcher去更新DOM
+
+
 
 ## 双向数据绑定
 
