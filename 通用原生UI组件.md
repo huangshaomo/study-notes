@@ -849,9 +849,17 @@ $('.input-btn, .input-text, .search-input').click(function(event){
 #home .pagin1 span{display: inline-block; margin-right: 10px; box-sizing: border-box;}
 #home .pagin1 .swiper-pagination-switch{width: 10px; height: 10px;  border: 1px solid #FFFFFF;}
 #home .pagin1 .swiper-active-switch{background: #fff;}
-</style>
-<div class="area1-content">
 
+</style>
+<div id="area4-cont">
+    <div class="swiper-container" id="swiper4">
+        <ul class="swiper-wrapper">
+            <li class="swiper-slide"><a href="" target="">
+                <img src="" alt="">
+                <p></p>
+            </a></li>
+        </ul>
+    </div>
 </div>
 <script>
     // area1
@@ -862,6 +870,14 @@ $('.input-btn, .input-text, .search-input').click(function(event){
         loop: true,
         autoplay:3000,
         autoplayDisableOnInteraction:false 
+    })
+        $('.arrow-left').on('click', function(e){
+        e.preventDefault()
+        mySwiper4.swipePrev()
+    })
+    $('.arrow-right').on('click', function(e){
+        e.preventDefault()
+        mySwiper4.swipeNext()
     })
 </script>
 ```
@@ -944,19 +960,17 @@ $('.input-btn, .input-text, .search-input').click(function(event){
 
 
 
-### 文字列表
+### 文字列表（竖排）
 
 ```html
 <style>
-    #home .area2-content{margin-top: 14px; height: 280px; border: 1px solid #EEEEEE;    padding: 10px 28px 28px; box-sizing: border-box;}
-    #home .area2-content ul{}
-    #home .area2-content li{height: 35px; line-height: 35px; border-bottom: 1px dashed #999; box-sizing: border-box;}
-    #home .area2-content li span{float: left; font-size: 14px;}
-    #home .area2-content li .time{float: right; vertical-align: middle; font-size: 10px; font-style: normal; color: #BFBFBF;}
-    #home .area2-content li:last-child{border-bottom: 1px solid transparent;}
+.textList li{height: 32px; line-height: 32px;box-sizing: border-box; position: relative;}
+.textList li span{float: left; font-size: 14px; padding-left: 20px; box-sizing: border-box;}
+.textList li .time{float: right; vertical-align: middle; font-size: 14px; font-style: normal; color: #7d7d7d;}
+.textList li:last-child{border-bottom: 1px solid transparent;}
 </style>
-<ul class="clearFix">
-    {$ltcms_区域2}
+<ul class="clearFix textList">
+    {$ltcms_区域3}
 </ul>
 <li><a href="#link" target="#target">
     <span>#title</span>
@@ -964,13 +978,25 @@ $('.input-btn, .input-text, .search-input').click(function(event){
 </a></li>
 ```
 
+![360chrome_G50d1jbEdw](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_G50d1jbEdw.png)
+
 ### 图文列表
 
-```html
-
+```css
+.PicText{width: 500px; height: 300px; font-size: 14px; overflow: hidden; position: relative;}
+.PicText img{width: 250px; height: 250px; display: block; float: left; margin-right: 20px;}
+.PicText p{text-indent: 2em; line-height: 24px; word-break: break-all; margin-top: -8px;}
+.PicText .details{font-style: normal; padding: 3px 6px; background: lightblue; color: #fff;line-height: 1;}
 ```
 
+```html
+    <div class="PicText">
+        <img src="#img_url" alt="">
+        <p>#zhaiyao</p>
+    </div>
+```
 
+![360chrome_35XFtkdqTA](https://hsm-typora-img.oss-cn-beijing.aliyuncs.com/img/360chrome_35XFtkdqTA.png)
 
 
 
